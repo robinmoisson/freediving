@@ -11,22 +11,87 @@
 <body>
 
 <div class="container-fluid">
-            <h1>Freediving tables</h1>
+    <h1>Freediving tables</h1>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+            <div id="generated_table"></div>
+            <button id="start" type="button" class="btn-default btn" disabled="disabled">Start apnea</button>
+        </div>
 
-            <button id="start" type="button" class="btn-default btn" disabled="true">Start apnea</button>
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10 form-horizontal">
+            <div class="form-group">
+                <label for="preparation_time" class="control-label col-sm-3">Initial rest time:</label>
+                <div class="col-sm-3">
+                    <input type="number" id="preparation_time" placeholder="seconds" value="45" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="round_number" class="control-label col-sm-3">Number of rounds:</label>
+                <div class="col-sm-3">
+                    <input type="number" id="round_number" value="9" class="form-control"/>
+                </div>
+            </div>
+        </div>
 
-            <p>Initial rest time: <input type="number" id="preparation_time"/> seconds.</p>
-            <p>Number of rounds:  <input type="number" id="round_number"/></p>
-
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-5">
             <h2>CO2 Table</h2>
 
-            <form id="C02_table">
-                <p>Starting rest time: <input type="number" class="first_rest"/> seconds.</p>
-                <p>Decrease rest time: <input type="number" class="decrease_by"/> seconds.</p>
-                <p>Hold time: <input type="number" class="hold_time"/> seconds.</p>
-                <button class="btn btn-default" type="submit">Create the table</button>
+            <form id="co2_table" class="form-horizontal">
+                <div class="form-group">
+                    <label for="co2_first_rest" class="control-label col-sm-6">Starting rest time:</label>
+                    <div class="col-sm-5">
+                        <input id="co2_first_rest" placeholder="seconds" name="co2_first_rest" type="number" value="60" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="co2_decrease_by" class="control-label col-sm-6">Decrease rest time by:</label>
+                    <div class="col-sm-5">
+                        <input id="co2_decrease_by" placeholder="seconds" name="co2_decrease_by" type="number" value="7" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="co2_hold_time" class="control-label col-sm-6">Hold time:</label>
+                    <div class="col-sm-5">
+                        <input id="co2_hold_time" placeholder="seconds" name="co2_hold_time" type="number" value="120" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-6 col-sm-5">
+                        <button class="btn btn-default" type="submit">Load the table</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="col-xs-12 col-sm-5">
+            <h2>O2 Table</h2>
+
+            <form id="o2_table" class="form-horizontal">
+                <div class="form-group">
+                    <label for="o2_rest" class="control-label col-sm-6">Rest time:</label>
+                    <div class="col-sm-5">
+                        <input id="o2_rest" placeholder="seconds" name="o2_rest" type="number" class="form-control" value="60"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="o2_increase_by" class="control-label col-sm-6">Increase hold time by:</label>
+                    <div class="col-sm-5">
+                        <input id="o2_increase_by" placeholder="seconds" name="o2_increase_by" type="number" value="10" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="o2_max_hold" class="control-label col-sm-6">Max hold time:</label>
+                    <div class="col-sm-5">
+                        <input id="o2_max_hold" placeholder="seconds" name="o2_max_hold" type="number" value="180" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-6 col-sm-5">
+                        <button class="btn btn-default" type="submit">Load the table</button>
+                    </div>
+                </div>
             </form>
 
         </div>
@@ -40,5 +105,48 @@
 <script src="js/Table.js"></script>
 <script>
 
+$(document).ready(function() {
+    var table;
+
+    $('#start').click(function(){
+        table.startTable();
+    });
+
+    $('#o2_table').submit(function (e) {
+        e.preventDefault();
+        var preparation_time = parseInt($('#preparation_time').val());
+        var round_number = parseInt($('#round_number').val());
+        var rest = parseInt($('#o2_rest').val());
+        var increase_by = parseInt($('#o2_increase_by').val());
+        var max_hold = parseInt($('#o2_max_hold').val());
+        table = new O2Table(preparation_time, round_number, new BeepSound(), rest, max_hold, increase_by);
+        table.generateTable();
+
+        $('#generated_table').html('');
+        table.intervalList.forEach(function(interval){
+            $('#generated_table').append('<p>'+interval.display()+'</p>');
+        });
+        $('#start').prop('disabled', false);
+    });
+
+    $('#co2_table').submit(function (e) {
+        e.preventDefault();
+        var preparation_time = parseInt($('#preparation_time').val());
+        var round_number = parseInt($('#round_number').val());
+        var first_rest = parseInt($('#o2_first_rest').val());
+        var decrease_by = parseInt($('#co2_decrease_by').val());
+        var hold_time = parseInt($('#co2_hold_time').val());
+        table = new CO2Table(preparation_time, round_number, new BeepSound(), hold_time, first_rest, decrease_by);
+        table.generateTable();
+
+        $('#generated_table').html('');
+        table.intervalList.forEach(function(interval){
+            $('#generated_table').append('<p>'+interval.display()+'</p>');
+        });
+        $('#start').prop('disabled', false);
+    });
+
+    $('')
+});
 </script>
 </html>

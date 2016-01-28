@@ -30,7 +30,6 @@ var Interval = (function(){
             that.remaining--;
         }
         else {
-            console.log('interval timer finished');
             that.stop();
         }
     };
