@@ -133,7 +133,7 @@ $(document).ready(function() {
         e.preventDefault();
         var preparation_time = parseInt($('#preparation_time').val());
         var round_number = parseInt($('#round_number').val());
-        var first_rest = parseInt($('#o2_first_rest').val());
+        var first_rest = parseInt($('#co2_first_rest').val());
         var decrease_by = parseInt($('#co2_decrease_by').val());
         var hold_time = parseInt($('#co2_hold_time').val());
         table = new CO2Table(preparation_time, round_number, new BeepSound(), hold_time, first_rest, decrease_by);
