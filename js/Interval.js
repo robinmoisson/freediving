@@ -15,6 +15,8 @@ var Interval = (function(){
             return;
         }
         console.log('Next interval -', that.getType(), that.remaining, 's');
+        that.beat();
+        _decreaseTimer(that);
         that.timer = setInterval(
             function(){
                 that.beat();
@@ -44,7 +46,10 @@ var Interval = (function(){
     };
 
     interval.prototype.beat = function() {
-        throw new Error('Method should be overridden.');
+        $.event.trigger({
+            type: 'beat',
+            msg: this.getType() + ' for ' + this.remaining + 's.'
+        })
     };
 
     interval.prototype.getType = function() {
@@ -70,6 +75,7 @@ var BreathingInterval = (function(){
 
     breathingInterval.prototype.beat = function() {
         console.log('Breathe heartbeat - remaining time:', this.remaining, 's');
+        Interval.prototype.beat.call(this);
         if (this.remaining === 0) {
             this.sound.playHold();
         }
@@ -100,6 +106,7 @@ var HoldingInterval = (function(){
 
     holdingInterval.prototype.beat = function() {
         console.log('Hold heartbeat - remaining time:', this.remaining, 's');
+        Interval.prototype.beat.call(this);
         if (this.remaining === 0) {
             this.sound.playBreathe();
         }

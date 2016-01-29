@@ -7,14 +7,15 @@ var Table = (function(){
         this.fireStart = $.Deferred();
         this.intervalCompletionPromise = this.fireStart.promise();
         this.currentInterval = null;
+        this.currentIntervalIndex = 0;
         this.running = false;
     };
 
-    table.prototype.generateTable = function() {
+    table.prototype.generate = function() {
         throw new Error('Not implemented');
     };
 
-    table.prototype.startTable = function() {
+    table.prototype.start = function() {
         _checkWeCanStartTable(this);
         this.running = true;
         _chainAllTable(this);
@@ -32,28 +33,34 @@ var Table = (function(){
 
     function _chainAllTable(that){
         for (var i = 0; i < that.intervalList.length; i++) {
-            (function(index){
-                _chainIntervalToPromise(that, that.intervalList[index]);
+            (function(intervalIndex){
+                _chainIntervalToPromise(that, intervalIndex);
             })(i);
         }
         that.intervalCompletionPromise.then(function(){
-            that.stopTable();
+            that.stop();
         });
     }
 
-    function _chainIntervalToPromise(that, interval) {
+    function _chainIntervalToPromise(that, intervalIndex) {
         that.intervalCompletionPromise = that.intervalCompletionPromise.then(function(){
-            that.currentInterval = interval;
-            return interval.start();
+            that.currentInterval = that.intervalList[intervalIndex];
+            $.event.trigger({
+                type: 'currentIntervalIndex',
+                msg: intervalIndex
+            });
+            return that.intervalList[intervalIndex].start();
         });
     }
 
-    table.prototype.pauseTable  =function(){
+    table.prototype.pause  =function(){
         this.currentInterval.pause();
     };
 
-    table.prototype.stopTable  =function(){
-        this.currentInterval.pause();
+    table.prototype.stop  =function(){
+        if (this.running === true) {
+            this.currentInterval.pause();
+        }
         this.intervalList = [];
         this.currentInterval = null;
         this.intervalCompletionPromise = null;
@@ -65,6 +72,8 @@ var Table = (function(){
 
 
 var CO2Table = (function(){
+    var _title = 'CO2 Table';
+
     var co2Table = function(preparationTime, numberOfRounds, sound, holdTime, firstRestTime, decreaseBy) {
         Table.call(this, preparationTime, numberOfRounds, sound);
         this.holdTime = holdTime;
@@ -75,7 +84,7 @@ var CO2Table = (function(){
     co2Table.prototype = Object.create(Table.prototype);
     co2Table.prototype.constructor = co2Table;
 
-    co2Table.prototype.generateTable = function(){
+    co2Table.prototype.generate = function(){
         var preparationInterval = new BreathingInterval(this.preparationTime, this.sound);
         this.intervalList.push(preparationInterval);
 
@@ -91,6 +100,10 @@ var CO2Table = (function(){
         }
     };
 
+    co2Table.prototype.getTitle = function(){
+        return _title;
+    };
+
     function _getBreatheTimeForRoundNumber(that, roundIndex){
         if (roundIndex > that.numberOfRounds) {
             throw new Error('The round index is too high.');
@@ -103,6 +116,8 @@ var CO2Table = (function(){
 
 
 var O2Table = (function(){
+    var _title = 'O2 Table';
+
     var o2Table = function(preparationTime, numberOfRounds, sound, restTime, maxHoldTime, increaseBy) {
         Table.call(this, preparationTime, numberOfRounds, sound);
         this.restTime = restTime;
@@ -113,7 +128,7 @@ var O2Table = (function(){
     o2Table.prototype = Object.create(Table.prototype);
     o2Table.prototype.constructor = o2Table;
 
-    o2Table.prototype.generateTable = function(){
+    o2Table.prototype.generate = function(){
         var preparationInterval = new BreathingInterval(this.preparationTime, this.sound);
         this.intervalList.push(preparationInterval);
 
@@ -127,6 +142,10 @@ var O2Table = (function(){
             var breatheInterval = new BreathingInterval(this.restTime, this.sound);
             this.intervalList.push(breatheInterval);
         }
+    };
+
+    o2Table.prototype.getTitle = function(){
+        return _title;
     };
 
     function _getHoldTimeForRoundNumber(that, roundIndex){

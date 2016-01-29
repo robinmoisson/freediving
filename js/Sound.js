@@ -47,15 +47,12 @@ var BeepSound = (function(){
         }
         if (typeof(interval)==='undefined') interval = 333;
 
-        var start  = $.Deferred();
-        var beepPromise = start.promise();
-        for (var i = 0; i < numberOfBeep; i++) {
+        var beepPromise = _delayedBeep(that, 0);
+        for (var i = 1; i < numberOfBeep; i++) {
             beepPromise = beepPromise.then(function(){
                 return _delayedBeep(that, interval);
             });
         }
-
-        start.resolve();
     };
 
     beepSound.prototype.playCountdownAt = function(remainingTime) {

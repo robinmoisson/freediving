@@ -5,6 +5,7 @@
     <title>Freediving tables</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="js/jquery-1.12.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 </head>
@@ -13,9 +14,11 @@
 <div class="container-fluid">
     <h1>Freediving tables</h1>
     <div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10" id="generated_table_wrapper">
+            <h3 id="generated_table_title"></h3>
             <div id="generated_table"></div>
-            <button id="start" type="button" class="btn-default btn" disabled="disabled">Start apnea</button>
+            <div><p id="current_timer" class="line-height"></p></div>
+            <button id="start_table" type="button" class="btn-default btn" disabled="disabled">Start apnea</button>
         </div>
 
         <div class="col-xs-12 col-sm-offset-1 col-sm-10 form-horizontal">
@@ -105,48 +108,96 @@
 <script src="js/Table.js"></script>
 <script>
 
-$(document).ready(function() {
-    var table;
 
-    $('#start').click(function(){
-        table.startTable();
+var table = null,
+    preparation_time,
+    round_number,
+    o2_rest,
+    o2_increase_by,
+    o2_max_hold,
+    co2_first_rest,
+    co2_decrease_by,
+    co2_hold_time;
+
+function updateSettings() {
+    preparation_time = parseInt($('#preparation_time').val());
+    round_number = parseInt($('#round_number').val());
+    o2_rest = parseInt($('#o2_rest').val());
+    o2_increase_by = parseInt($('#o2_increase_by').val());
+    o2_max_hold = parseInt($('#o2_max_hold').val());
+    co2_first_rest = parseInt($('#co2_first_rest').val());
+    co2_decrease_by = parseInt($('#co2_decrease_by').val());
+    co2_hold_time = parseInt($('#co2_hold_time').val());
+}
+
+function createIntervalHTMLElement(intervalList, intervalIndex){
+    var html = '<span class="interval" id="table_interval_' + intervalIndex + '">';
+    html += intervalList[intervalIndex].display() + '</span>';
+    return html;
+}
+
+function displayTable() {
+    $('#generated_table_title').html(table.getTitle());
+    $('#generated_table').html('');
+
+    for (var i = 0; i < table.intervalList.length; i = i+2) {
+        $('#generated_table').append('<p>')
+                .append(createIntervalHTMLElement(table.intervalList, i))
+                .append(createIntervalHTMLElement(table.intervalList, i+1))
+                .append('</p>');
+    }
+    $('#start_table').prop('disabled', false);
+}
+
+function setCurrentTable(newTable){
+    if (table !== null) {
+        table.stop();
+    }
+    table = newTable;
+    table.generate();
+    displayTable();
+}
+
+$(document).ready(function() {
+
+    $('#start_table').click(function(){
+        table.start();
+    });
+
+    $('#pause_table').click(function(){
+        table.pause();
+    });
+
+    $('#stop_table').click(function(){
+        table.stop();
     });
 
     $('#o2_table').submit(function (e) {
         e.preventDefault();
-        var preparation_time = parseInt($('#preparation_time').val());
-        var round_number = parseInt($('#round_number').val());
-        var rest = parseInt($('#o2_rest').val());
-        var increase_by = parseInt($('#o2_increase_by').val());
-        var max_hold = parseInt($('#o2_max_hold').val());
-        table = new O2Table(preparation_time, round_number, new BeepSound(), rest, max_hold, increase_by);
-        table.generateTable();
-
-        $('#generated_table').html('');
-        table.intervalList.forEach(function(interval){
-            $('#generated_table').append('<p>'+interval.display()+'</p>');
-        });
-        $('#start').prop('disabled', false);
+        $('#current_timer').html('');
+        updateSettings();
+        var newTable = new O2Table(preparation_time, round_number, new BeepSound(), o2_rest, o2_max_hold, o2_increase_by);
+        setCurrentTable(newTable);
     });
 
     $('#co2_table').submit(function (e) {
         e.preventDefault();
-        var preparation_time = parseInt($('#preparation_time').val());
-        var round_number = parseInt($('#round_number').val());
-        var first_rest = parseInt($('#co2_first_rest').val());
-        var decrease_by = parseInt($('#co2_decrease_by').val());
-        var hold_time = parseInt($('#co2_hold_time').val());
-        table = new CO2Table(preparation_time, round_number, new BeepSound(), hold_time, first_rest, decrease_by);
-        table.generateTable();
-
-        $('#generated_table').html('');
-        table.intervalList.forEach(function(interval){
-            $('#generated_table').append('<p>'+interval.display()+'</p>');
-        });
-        $('#start').prop('disabled', false);
+        $('#current_timer').html('');
+        updateSettings();
+        var newTable = new CO2Table(preparation_time, round_number, new BeepSound(), co2_hold_time, co2_first_rest, co2_decrease_by);
+        setCurrentTable(newTable);
     });
 
-    $('')
+    $(document).on('beat', function(event){
+        $('#current_timer').html(event.msg);
+    });
+
+    var currentIntervalIndex = '0';
+    $(document).on('currentIntervalIndex', function(event){
+        $('#table_interval_'+currentIntervalIndex).removeClass('active-interval');
+        $('#table_interval_'+event.msg).addClass('active-interval');
+        currentIntervalIndex = event.msg;
+    });
 });
 </script>
 </html>
