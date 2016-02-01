@@ -4,105 +4,131 @@
     <meta charset="UTF-8">
     <title>Freediving tables</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/lavish-bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/jquery-1.12.0.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 </head>
 <body>
 
-<div class="container-fluid">
-    <h1>Freediving tables</h1>
-    <div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-10" id="generated_table_wrapper">
-            <h3 id="generated_table_title"></h3>
-            <div id="generated_table"></div>
-            <div><p id="current_timer" class="line-height"></p></div>
-            <button id="start_table" type="button" class="btn-default btn" disabled="disabled">Start apnea</button>
+<div class="main-div-wrapper">
+    <div class="container main-div">
+
+        <div class="row">
+            <nav class="navbar navbar-static-top navbar-inverse">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">Freediving tables</a>
+                    </div>
+                    <p class="navbar-text navbar-quote">"Be a little kinder" Aldous Huxley</p>
+                </div>
+            </nav>
         </div>
 
-        <div class="col-xs-12 col-sm-offset-1 col-sm-10 form-horizontal">
-            <div class="form-group">
-                <label for="preparation_time" class="control-label col-sm-3">Initial rest time:</label>
-                <div class="col-sm-3">
-                    <input type="number" id="preparation_time" placeholder="seconds" value="45" class="form-control"/>
+        <h1>Freediving tables</h1>
+        <div class="row">
+
+            <div class="col-xs-12 col-sm-offset-1 col-sm-5" id="generated_table_wrapper">
+                <h2 id="generated_table_title">Current table</h2>
+                <p id="current_timer" class="line-height timer hidden"></p>
+                <div id="generated_table"><p>The table is empty - generate yours below.</p></div>
+                <div class="pull-right">
+                    <button id="pause_table" type="button" class="btn" disabled="disabled">Pause</button>
+                    <button id="start_table" type="button" class="btn" disabled="disabled">Start apnea</button>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="round_number" class="control-label col-sm-3">Number of rounds:</label>
-                <div class="col-sm-3">
-                    <input type="number" id="round_number" value="9" class="form-control"/>
+
+            <div class="col-xs-12 col-sm-5">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="preparation_time" class="control-label col-sm-8">Initial rest time:</label>
+                        <div class="col-sm-4">
+                            <input type="number" id="preparation_time" placeholder="seconds" value="45" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="round_number" class="control-label col-sm-8">Number of rounds:</label>
+                        <div class="col-sm-4">
+                            <input type="number" id="round_number" value="9" class="form-control"/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-5">
+                <h3>CO2 Table</h3>
 
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-5">
-            <h2>CO2 Table</h2>
+                <form id="co2_table" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="co2_first_rest" class="control-label col-sm-6 col-xs-6">Starting rest time:</label>
+                        <div class="col-xs-5">
+                            <input id="co2_first_rest" placeholder="seconds" name="co2_first_rest" type="number" value="60" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="co2_decrease_by" class="control-label col-sm-6">Decrease rest time by:</label>
+                        <div class="col-sm-5">
+                            <input id="co2_decrease_by" placeholder="seconds" name="co2_decrease_by" type="number" value="7" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="co2_hold_time" class="control-label col-sm-6">Hold time:</label>
+                        <div class="col-sm-5">
+                            <input id="co2_hold_time" placeholder="seconds" name="co2_hold_time" type="number" value="120" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-6 col-sm-5">
+                            <button class="btn" type="submit">Load the table</button>
+                        </div>
+                    </div>
+                </form>
 
-            <form id="co2_table" class="form-horizontal">
-                <div class="form-group">
-                    <label for="co2_first_rest" class="control-label col-sm-6">Starting rest time:</label>
-                    <div class="col-sm-5">
-                        <input id="co2_first_rest" placeholder="seconds" name="co2_first_rest" type="number" value="60" class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="co2_decrease_by" class="control-label col-sm-6">Decrease rest time by:</label>
-                    <div class="col-sm-5">
-                        <input id="co2_decrease_by" placeholder="seconds" name="co2_decrease_by" type="number" value="7" class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="co2_hold_time" class="control-label col-sm-6">Hold time:</label>
-                    <div class="col-sm-5">
-                        <input id="co2_hold_time" placeholder="seconds" name="co2_hold_time" type="number" value="120" class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-6 col-sm-5">
-                        <button class="btn btn-default" type="submit">Load the table</button>
-                    </div>
-                </div>
-            </form>
+            </div>
+            <div class="col-xs-12 col-sm-5">
+                <h3>O2 Table</h3>
 
+                <form id="o2_table" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="o2_rest" class="control-label col-sm-6">Rest time:</label>
+                        <div class="col-sm-5">
+                            <input id="o2_rest" placeholder="seconds" name="o2_rest" type="number" class="form-control" value="60"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="o2_increase_by" class="control-label col-sm-6">Increase hold time by:</label>
+                        <div class="col-sm-5">
+                            <input id="o2_increase_by" placeholder="seconds" name="o2_increase_by" type="number" value="10" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="o2_max_hold" class="control-label col-sm-6">Max hold time:</label>
+                        <div class="col-sm-5">
+                            <input id="o2_max_hold" placeholder="seconds" name="o2_max_hold" type="number" value="180" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-6 col-sm-5">
+                            <button class="btn" type="submit">Load the table</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
         </div>
-        <div class="col-xs-12 col-sm-5">
-            <h2>O2 Table</h2>
 
-            <form id="o2_table" class="form-horizontal">
-                <div class="form-group">
-                    <label for="o2_rest" class="control-label col-sm-6">Rest time:</label>
-                    <div class="col-sm-5">
-                        <input id="o2_rest" placeholder="seconds" name="o2_rest" type="number" class="form-control" value="60"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="o2_increase_by" class="control-label col-sm-6">Increase hold time by:</label>
-                    <div class="col-sm-5">
-                        <input id="o2_increase_by" placeholder="seconds" name="o2_increase_by" type="number" value="10" class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="o2_max_hold" class="control-label col-sm-6">Max hold time:</label>
-                    <div class="col-sm-5">
-                        <input id="o2_max_hold" placeholder="seconds" name="o2_max_hold" type="number" value="180" class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-6 col-sm-5">
-                        <button class="btn btn-default" type="submit">Load the table</button>
-                    </div>
-                </div>
-            </form>
-
+        <div class="row">
+            <footer class="navbar-inverse container-fluid">
+                <p class="footer-text">Made with <3 — photo courtesy of Christine Armie Marquez</p>
+            </footer>
         </div>
     </div>
 </div>
 
 </body>
 
+<script src="js/Error.js"></script>
 <script src="js/Sound.js"></script>
 <script src="js/Interval.js"></script>
 <script src="js/Table.js"></script>
@@ -118,6 +144,8 @@ var table = null,
     co2_first_rest,
     co2_decrease_by,
     co2_hold_time;
+
+var isTryingToGenerateIntervalTooShort = false;
 
 function updateSettings() {
     preparation_time = parseInt($('#preparation_time').val());
@@ -137,16 +165,25 @@ function createIntervalHTMLElement(intervalList, intervalIndex){
 }
 
 function displayTable() {
-    $('#generated_table_title').html(table.getTitle());
+    $('#generated_table_title').html('Current table: ' + table.getType());
     $('#generated_table').html('');
 
-    for (var i = 0; i < table.intervalList.length; i = i+2) {
-        $('#generated_table').append('<p>')
-                .append(createIntervalHTMLElement(table.intervalList, i))
-                .append(createIntervalHTMLElement(table.intervalList, i+1))
-                .append('</p>');
+    for (var i = 0; i < table.intervalList.length-1; i = i+2) {
+        $('#generated_table').append(
+                '<p>'
+                + '<span class="round-number">' + i/2 + '.</span>'
+                + createIntervalHTMLElement(table.intervalList, i)
+                + createIntervalHTMLElement(table.intervalList, i+1)
+                + '</p>'
+        );
+    }
+
+    if (table.isTryingToGenerateIntervalTooShort === true) {
+        $('#generated_table').append('<p class="interval-too-short">You reached the minimum interval length of 12s.</p>');
     }
     $('#start_table').prop('disabled', false);
+
+    updateButtonsForTablePaused();
 }
 
 function setCurrentTable(newTable){
@@ -158,23 +195,30 @@ function setCurrentTable(newTable){
     displayTable();
 }
 
+function updateButtonsForTableRunning(){
+    $('#start_table').prop('disabled', true);
+    $('#pause_table').prop('disabled', false);
+}
+
+function updateButtonsForTablePaused(){
+    $('#start_table').prop('disabled', false);
+    $('#pause_table').prop('disabled', true);
+}
+
 $(document).ready(function() {
 
     $('#start_table').click(function(){
         table.start();
+        updateButtonsForTableRunning();
     });
 
     $('#pause_table').click(function(){
         table.pause();
-    });
-
-    $('#stop_table').click(function(){
-        table.stop();
+        updateButtonsForTablePaused();
     });
 
     $('#o2_table').submit(function (e) {
         e.preventDefault();
-        $('#current_timer').html('');
         updateSettings();
         var newTable = new O2Table(preparation_time, round_number, new BeepSound(), o2_rest, o2_max_hold, o2_increase_by);
         setCurrentTable(newTable);
@@ -182,14 +226,21 @@ $(document).ready(function() {
 
     $('#co2_table').submit(function (e) {
         e.preventDefault();
-        $('#current_timer').html('');
         updateSettings();
         var newTable = new CO2Table(preparation_time, round_number, new BeepSound(), co2_hold_time, co2_first_rest, co2_decrease_by);
         setCurrentTable(newTable);
     });
 
+    var current_timer = $('#current_timer');
     $(document).on('beat', function(event){
-        $('#current_timer').html(event.msg);
+        if (current_timer.hasClass('hidden') === true) {
+            current_timer.removeClass('hidden');
+        }
+        current_timer.html(event.msg);
+    });
+
+    $(document).on('tableCompleted', function(event){
+         current_timer.html('Table completed.');
     });
 
     var currentIntervalIndex = '0';
@@ -197,6 +248,12 @@ $(document).ready(function() {
         $('#table_interval_'+currentIntervalIndex).removeClass('active-interval');
         $('#table_interval_'+event.msg).addClass('active-interval');
         currentIntervalIndex = event.msg;
+    });
+
+    $(document).on('tableStopped', function(){
+        $('#table_interval_'+currentIntervalIndex).removeClass('active-interval');
+        $('#current_timer').html('');
+        $('#current_timer').addClass('hidden');
     });
 });
 </script>

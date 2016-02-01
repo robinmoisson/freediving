@@ -1,6 +1,10 @@
 var Interval = (function(){
 
     var interval = function Interval(duration, sound) {
+        if (duration < 12) {
+            throw new IntervalError('Interval duration has to be more than 12s.');
+        }
+
         this.duration = duration;
         this.remaining = duration;
         this.sound = sound;
@@ -48,7 +52,7 @@ var Interval = (function(){
     interval.prototype.beat = function() {
         $.event.trigger({
             type: 'beat',
-            msg: this.getType() + ' for ' + this.remaining + 's.'
+            msg: this.getType() + ' for ' + this.remaining + 's'
         })
     };
 
@@ -74,7 +78,6 @@ var BreathingInterval = (function(){
     breathingInterval.constructor = breathingInterval;
 
     breathingInterval.prototype.beat = function() {
-        console.log('Breathe heartbeat - remaining time:', this.remaining, 's');
         Interval.prototype.beat.call(this);
         if (this.remaining === 0) {
             this.sound.playHold();
@@ -105,7 +108,6 @@ var HoldingInterval = (function(){
     holdingInterval.prototype.constructor = holdingInterval;
 
     holdingInterval.prototype.beat = function() {
-        console.log('Hold heartbeat - remaining time:', this.remaining, 's');
         Interval.prototype.beat.call(this);
         if (this.remaining === 0) {
             this.sound.playBreathe();

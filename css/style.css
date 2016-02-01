@@ -1,11 +1,80 @@
+html {
+    height: 100%;
+}
+
+body{
+    /*color: white;*/
+    height:100%;
+    width: 100%;
+    background: url('/img/christine_freediving.jpg') fixed;
+    background-size: cover;
+    /*css hack for ie*/
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.image.jpg',sizingMethod='scale');
+    -ms-filter:"progid:DXImageTransform.Microsoft.AlphaImageLoader(src='image.jpg',sizingMethod='scale')";
+}
+
 .line-height {
     min-height: 1em;
 }
 
 .active-interval {
-    background-color: green;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.timer {
+    color: white;
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
 }
 
 .interval {
     margin: 5px;
+}
+
+.interval-too-short {
+    font-weight: bold;
+}
+
+.main-div-wrapper {
+    height: auto;
+    min-height: 100%;
+}
+
+@media(min-width:768px) {
+    .main-div-wrapper {
+        padding-top: 2em;
+        padding-bottom: 2em;
+    }
+}
+
+.main-div {
+    background: rgba(173, 202, 215, 0.7) fixed;
+}
+
+.navbar-quote {
+    line-height: 20px;
+    font-style: italic;
+}
+
+.right {
+    text-align: right;
+}
+
+.round-number {
+    font-weight: bold;
+}
+
+footer {
+    margin-bottom: 0;
+    color: #91b2c2;
+    width: 100%;
+}
+
+.footer-text {
+    vertical-align: middle;
+    line-height: 2em;
+    text-align: center;
+    margin: 0;
 }
