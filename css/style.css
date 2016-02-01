@@ -6,7 +6,7 @@ body{
     /*color: white;*/
     height:100%;
     width: 100%;
-    background: url('/img/christine_freediving.jpg') fixed;
+    background: url('../img/christine_freediving.jpg') fixed;
     background-size: cover;
     /*css hack for ie*/
     filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='.image.jpg',sizingMethod='scale');
