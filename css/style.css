@@ -3,7 +3,6 @@ html {
 }
 
 body{
-    /*color: white;*/
     height:100%;
     width: 100%;
     background: url('../img/christine_freediving.jpg') fixed;
@@ -22,11 +21,21 @@ body{
     text-decoration: underline;
 }
 
+.timer-wrapper {
+    height: 100%;
+}
+
 .timer {
     color: white;
     font-weight: bold;
     font-size: 2em;
     text-align: center;
+}
+
+@media(min-width:992px) {
+    .timer {
+        font-size: 3em;
+    }
 }
 
 .interval {
@@ -50,7 +59,7 @@ body{
 }
 
 .main-div {
-    background: rgba(173, 202, 215, 0.7) fixed;
+    background: rgba(173, 202, 215, 0.6) fixed;
 }
 
 .navbar-quote {
@@ -77,4 +86,13 @@ footer {
     line-height: 2em;
     text-align: center;
     margin: 0;
+}
+
+input {
+    text-align: right;
+}
+
+.input-group-addon {
+    background-color: white;
+    border-left: none;
 }
