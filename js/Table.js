@@ -59,6 +59,7 @@ var Table = (function(){
             $.event.trigger({
                 type: 'tableCompleted'
             });
+            that.sound.playTableCompleted();
         });
     }
 

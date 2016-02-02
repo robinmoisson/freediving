@@ -38,7 +38,7 @@ var Interval = (function(){
         else {
             that.stop();
         }
-    };
+    }
 
     interval.prototype.pause = function() {
         clearInterval(this.timer);
@@ -79,15 +79,12 @@ var BreathingInterval = (function(){
 
     breathingInterval.prototype.beat = function() {
         Interval.prototype.beat.call(this);
-        if (this.remaining === 0) {
-            this.sound.playHold();
-        }
-        else if (this.remaining > 0) {
-            this.sound.playCountdownAt(this.remaining);
-        }
-        else {
-            throw new Error("The countdown went too low.");
-        }
+        this.sound.playCountdownAt(this.remaining);
+    };
+
+    breathingInterval.prototype.start = function() {
+        Interval.prototype.start.call(this);
+        this.sound.playBreathe();
     };
 
     breathingInterval.prototype.getType = function(){
@@ -107,11 +104,9 @@ var HoldingInterval = (function(){
     holdingInterval.prototype = Object.create(Interval.prototype);
     holdingInterval.prototype.constructor = holdingInterval;
 
-    holdingInterval.prototype.beat = function() {
-        Interval.prototype.beat.call(this);
-        if (this.remaining === 0) {
-            this.sound.playBreathe();
-        }
+    holdingInterval.prototype.start = function() {
+        Interval.prototype.start.call(this);
+        this.sound.playHold();
     };
 
     holdingInterval.prototype.getType = function(){

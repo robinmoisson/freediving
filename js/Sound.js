@@ -14,7 +14,95 @@ var Sound = (function(){
         throw new Error('Method should be overridden.');
     };
 
+    sound.prototype.playTableCompleted = function() {
+        throw new Error('Method should be overridden.');
+    };
+
     return sound;
+})();
+
+var GoogleSound = (function(){
+    var _audioPath = '../sound/google/';
+    var _oneAudio = new Audio(_audioPath + '1_one.mp3'),
+        _twoAudio = new Audio(_audioPath + '2_two.mp3'),
+        _threeAudio = new Audio(_audioPath + '3_three.mp3'),
+        _fourAudio = new Audio(_audioPath + '4_four.mp3'),
+        _fiveAudio = new Audio(_audioPath + '5_five.mp3'),
+        _sixAudio = new Audio(_audioPath + '6_six.mp3'),
+        _sevenAudio = new Audio(_audioPath + '7_seven.mp3'),
+        _eightAudio = new Audio(_audioPath + '8_eight.mp3'),
+        _nineAudio = new Audio(_audioPath + '9_nine.mp3'),
+        _tenAudio = new Audio(_audioPath + '10_ten.mp3'),
+        _twentyAudio = new Audio(_audioPath + '20_twenty.mp3'),
+        _thirtyAudio = new Audio(_audioPath + '30_thirty.mp3'),
+        _holdAudio = new Audio(_audioPath + 'hold.mp3'),
+        _breatheAudio = new Audio(_audioPath + 'breathe.mp3'),
+        _tableCompletedAudio = new Audio(_audioPath + 'completed.mp3');
+
+    var googleSound = function GoogleSound() {
+        Sound.call(this);
+    };
+
+    googleSound.prototype = Object.create(Sound.prototype);
+    googleSound.prototype.constructor = googleSound;
+
+
+    googleSound.prototype.playCountdownAt = function(remainingTime) {
+        switch (remainingTime) {
+            case 1:
+                _oneAudio.play();
+                break;
+            case 2:
+                _twoAudio.play();
+                break;
+            case 3:
+                _threeAudio.play();
+                break;
+            case 4:
+                _fourAudio.play();
+                break;
+            case 5:
+                _fiveAudio.play();
+                break;
+            case 6:
+                _sixAudio.play();
+                break;
+            case 7:
+                _sevenAudio.play();
+                break;
+            case 8:
+                _eightAudio.play();
+                break;
+            case 9:
+                _nineAudio.play();
+                break;
+            case 10:
+                _tenAudio.play();
+                break;
+
+            case 20:
+                _twentyAudio.play();
+                break;
+
+            case 30:
+                _thirtyAudio.play();
+                break;
+        }
+    };
+
+    googleSound.prototype.playHold = function() {
+        _holdAudio.play();
+    };
+
+    googleSound.prototype.playBreathe = function() {
+        _breatheAudio.play();
+    };
+
+    googleSound.prototype.playTableCompleted = function() {
+        _tableCompletedAudio.play();
+    };
+
+    return googleSound;
 })();
 
 var BeepSound = (function(){
@@ -38,7 +126,7 @@ var BeepSound = (function(){
             d.resolve();
         }, timeout);
         return d.promise();
-    };
+    }
 
     beepSound.prototype.playNBeep = function (numberOfBeep, interval) {
         var that = this;
@@ -86,6 +174,10 @@ var BeepSound = (function(){
 
     beepSound.prototype.playBreathe = function() {
         this.playNBeep(5);
+    };
+
+    beepSound.prototype.playBreathe = function() {
+        this.playNBeep(6);
     };
 
     return beepSound;

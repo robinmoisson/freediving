@@ -55,7 +55,7 @@
                             <label for="preparation_time" class="control-label col-xs-6 col-sm-3 col-md-2">Initial rest time:</label>
                             <div class="col-xs-6 col-sm-3 col-md-2">
                                 <div class="input-group">
-                                     <input type="number" id="preparation_time" placeholder="seconds" value="45" class="second-input form-control"/>
+                                     <input type="number" id="preparation_time" value="45" class="second-input form-control"/>
                                      <div class="input-group-addon">s</div>
                                  </div>
                             </div>
@@ -75,7 +75,7 @@
                                 <label for="co2_first_rest" class="control-label col-sm-6 col-xs-6">Starting rest time:</label>
                                 <div class="col-xs-5">
                                     <div class="input-group">
-                                        <input id="co2_first_rest" placeholder="seconds" name="co2_first_rest" type="number" value="60" class="form-control second-input"/>
+                                        <input id="co2_first_rest" name="co2_first_rest" type="number" value="60" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -84,7 +84,7 @@
                                 <label for="co2_decrease_by" class="control-label col-sm-6">Decrease rest time by:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="co2_decrease_by" placeholder="seconds" name="co2_decrease_by" type="number" value="7" class="form-control second-input"/>
+                                        <input id="co2_decrease_by" name="co2_decrease_by" type="number" value="7" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                 <label for="co2_hold_time" class="control-label col-sm-6">Hold time:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="co2_hold_time" placeholder="seconds" name="co2_hold_time" type="number" value="120" class="form-control second-input"/>
+                                        <input id="co2_hold_time" name="co2_hold_time" type="number" value="120" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@
                                 <label for="o2_rest" class="control-label col-sm-6">Rest time:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="o2_rest" placeholder="seconds" name="o2_rest" type="number" class="form-control second-input" value="60"/>
+                                        <input id="o2_rest" name="o2_rest" type="number" class="form-control second-input" value="60"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                 <label for="o2_increase_by" class="control-label col-sm-6">Increase hold time by:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="o2_increase_by" placeholder="seconds" name="o2_increase_by" type="number" value="10" class="form-control second-input"/>
+                                        <input id="o2_increase_by" name="o2_increase_by" type="number" value="10" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@
                                 <label for="o2_max_hold" class="control-label col-sm-6">Max hold time:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="o2_max_hold" placeholder="seconds" name="o2_max_hold" type="number" value="180" class="form-control second-input"/>
+                                        <input id="o2_max_hold" name="o2_max_hold" type="number" value="180" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -190,6 +190,9 @@ function updateSettings() {
 }
 
 function createIntervalHTMLElement(intervalList, intervalIndex){
+    if (typeof(intervalList[intervalIndex]) === 'undefined') {
+        return '';
+    }
     var html = '<span class="interval" id="table_interval_' + intervalIndex + '">';
     html += intervalList[intervalIndex].display() + '</span>';
     return html;
@@ -199,10 +202,10 @@ function displayTable() {
     $('#generated_table_title').html('Current table: ' + table.getType());
     $('#generated_table').html('');
 
-    for (var i = 0; i < table.intervalList.length-1; i = i+2) {
+    for (var i = 0; i < table.intervalList.length; i = i+2) {
         $('#generated_table').append(
                 '<p>'
-                + '<span class="round-number">' + i/2 + '.</span>'
+                + '<span class="round-number">' + (i/2+1).toString() + '.</span>'
                 + createIntervalHTMLElement(table.intervalList, i)
                 + createIntervalHTMLElement(table.intervalList, i+1)
                 + '</p>'
@@ -236,6 +239,8 @@ function updateButtonsForTablePaused(){
     $('#pause_table').prop('disabled', true);
 }
 
+var sound = new GoogleSound();
+
 $(document).ready(function() {
 
     $('#start_table').click(function(){
@@ -251,14 +256,14 @@ $(document).ready(function() {
     $('#o2_table').submit(function (e) {
         e.preventDefault();
         updateSettings();
-        var newTable = new O2Table(preparation_time, round_number, new BeepSound(), o2_rest, o2_max_hold, o2_increase_by);
+        var newTable = new O2Table(preparation_time, round_number, sound, o2_rest, o2_max_hold, o2_increase_by);
         setCurrentTable(newTable);
     });
 
     $('#co2_table').submit(function (e) {
         e.preventDefault();
         updateSettings();
-        var newTable = new CO2Table(preparation_time, round_number, new BeepSound(), co2_hold_time, co2_first_rest, co2_decrease_by);
+        var newTable = new CO2Table(preparation_time, round_number, sound, co2_hold_time, co2_first_rest, co2_decrease_by);
         setCurrentTable(newTable);
     });
 
