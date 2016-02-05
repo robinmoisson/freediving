@@ -22,10 +22,6 @@ body{
     text-decoration: underline;
 }
 
-.timer-wrapper {
-    height: 100%;
-}
-
 .timer {
     color: white;
     font-weight: bold;
@@ -63,11 +59,16 @@ body{
     background: rgba(173, 202, 215, 0.6) fixed;
 }
 
+.total-time {
+    font-weight: bold;
+}
+
 .navbar-header {
     width: 100%;
 }
 
 .navbar-quote {
+    color: #7892a3 !important;
     line-height: 20px;
     font-style: italic;
     float: right;

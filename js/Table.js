@@ -36,6 +36,26 @@ var Table = (function(){
         throw new Error('Not implemented');
     };
 
+    table.prototype.getTotalDurationString = function() {
+        var total = _calculateTotalDuration(this);
+        var hours = Math.floor(total/3600);
+        total -= hours * 3600;
+        var minutes = Math.floor(total/60);
+        total -= minutes * 60;
+        var seconds = total;
+        return ((hours > 0) ? (hours+'h') : '')
+            + ((minutes > 0) ? (minutes+'min') : '')
+            + ((seconds > 0) ? (seconds+'s') : '');
+    };
+
+    function _calculateTotalDuration(that) {
+        var total = 0;
+        that.intervalList.forEach(function(interval){
+            total += interval.duration;
+        });
+        return total;
+    }
+
     table.prototype.getType = function() {
         throw new Error('Not implemented');
     };
