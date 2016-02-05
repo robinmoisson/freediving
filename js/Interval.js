@@ -14,13 +14,11 @@ var Interval = (function(){
 
     interval.prototype.start = function() {
         var that = this;
-        if (that.remaining === 0){
-            console.log('Interval already finished.');
-            return;
-        }
         console.log('Next interval -', that.getType(), that.remaining, 's');
+
         that.beat();
         _decreaseTimer(that);
+
         that.timer = setInterval(
             function(){
                 that.beat();
@@ -28,6 +26,7 @@ var Interval = (function(){
             },
             1000
         );
+
         return that.finished.promise();
     };
 
@@ -47,6 +46,10 @@ var Interval = (function(){
     interval.prototype.stop = function() {
         clearInterval(this.timer);
         this.finished.resolve();
+
+        // reset the interval for reuse
+        this.finished = $.Deferred();
+        this.remaining = this.duration;
     };
 
     interval.prototype.beat = function() {
@@ -83,8 +86,9 @@ var BreathingInterval = (function(){
     };
 
     breathingInterval.prototype.start = function() {
-        Interval.prototype.start.call(this);
+        var promise = Interval.prototype.start.call(this);
         this.sound.playBreathe();
+        return promise;
     };
 
     breathingInterval.prototype.getType = function(){
@@ -105,8 +109,9 @@ var HoldingInterval = (function(){
     holdingInterval.prototype.constructor = holdingInterval;
 
     holdingInterval.prototype.start = function() {
-        Interval.prototype.start.call(this);
+        var promise = Interval.prototype.start.call(this);
         this.sound.playHold();
+        return promise;
     };
 
     holdingInterval.prototype.getType = function(){

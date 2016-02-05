@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Freediving tables</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/lavish-bootstrap.css">
@@ -19,8 +20,8 @@
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <a class="navbar-brand" href="#">Freediving Tables</a>
+                        <p class="navbar-text navbar-quote hidden-xs">"Be a little kinder" Aldous Huxley</p>
                     </div>
-                    <p class="navbar-text navbar-quote pull-right">"Be a little kinder" Aldous Huxley</p>
                 </div>
             </nav>
         </div>
@@ -31,14 +32,12 @@
                 <h1>Freediving Tables</h1>
                 <div class="row">
 
-                    <h2 id="generated_table_title">Current table</h2>
+                    <div class="col-xs-12">
+                        <h2 id="generated_table_title">Current table</h2>
+                    </div>
 
                     <div class="col-xs-12 col-sm-6" id="generated_table_wrapper">
-                        <div id="generated_table"><p>The table is empty - generate yours below.</p></div>
-                        <div class="pull-right">
-                            <button id="pause_table" type="button" class="btn" disabled="disabled">Pause</button>
-                            <button id="start_table" type="button" class="btn" disabled="disabled">Start apnea</button>
-                        </div>
+                        <div id="generated_table"><p>The table is empty - load yours below.</p></div>
                     </div>
 
                     <div class="col-xs-12 col-sm-6 timer-wrapper">
@@ -47,21 +46,32 @@
 
                 </div>
                 <div class="row">
+                    <div class="col-xs-12 col-sm-4">
+                        <button class="btn" id="submit_co2">Load CO2</button>
+                        <button class="btn" id="submit_o2">Load O2</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-4  btn-control">
+                        <button id="pause_table" class="btn" disabled="disabled">Pause</button>
+                        <button id="start_table" class="btn" disabled="disabled">Start apnea</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Generate Table</h2>
 
-                    <h2>Generate Table</h2>
-
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label for="preparation_time" class="control-label col-xs-6 col-sm-3 col-md-2">Initial rest time:</label>
-                            <div class="col-xs-6 col-sm-3 col-md-2">
-                                <div class="input-group">
-                                     <input type="number" id="preparation_time" value="45" class="second-input form-control"/>
-                                     <div class="input-group-addon">s</div>
-                                 </div>
-                            </div>
-                            <label for="round_number" class="control-label col-xs-6 col-sm-3 col-md-2">Number of rounds:</label>
-                            <div class="col-xs-6 col-sm-3 col-md-2">
-                                <input type="number" id="round_number" value="9" class="col-xs-2 form-control"/>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label for="preparation_time" class="control-label col-sm-3 col-md-2">Initial rest time:</label>
+                                <div class="col-sm-3 col-md-2">
+                                    <div class="input-group">
+                                         <input type="number" id="preparation_time" value="45" class="second-input form-control"/>
+                                         <div class="input-group-addon">s</div>
+                                     </div>
+                                </div>
+                                <label for="round_number" class="control-label col-sm-3 col-md-2">Number of rounds:</label>
+                                <div class="col-sm-3 col-md-2">
+                                    <input type="number" id="round_number" value="9" class="col-xs-2 form-control"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,8 +82,8 @@
 
                         <form id="co2_table" class="form-horizontal">
                             <div class="form-group">
-                                <label for="co2_first_rest" class="control-label col-sm-6 col-xs-6">Starting rest time:</label>
-                                <div class="col-xs-5">
+                                <label for="co2_first_rest" class="control-label col-sm-6">Starting rest time:</label>
+                                <div class="col-sm-5">
                                     <div class="input-group">
                                         <input id="co2_first_rest" name="co2_first_rest" type="number" value="60" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
@@ -98,7 +108,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group hidden">
                                 <div class="col-sm-offset-6 col-sm-5">
                                     <button class="btn" type="submit">Load the CO2 table</button>
                                 </div>
@@ -137,7 +147,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group hidden">
                                 <div class="col-sm-offset-6 col-sm-5">
                                     <button class="btn" type="submit">Load the O2 table</button>
                                 </div>
@@ -189,23 +199,15 @@ function updateSettings() {
     co2_hold_time = parseInt($('#co2_hold_time').val());
 }
 
-function createIntervalHTMLElement(intervalList, intervalIndex){
-    if (typeof(intervalList[intervalIndex]) === 'undefined') {
-        return '';
-    }
-    var html = '<span class="interval" id="table_interval_' + intervalIndex + '">';
-    html += intervalList[intervalIndex].display() + '</span>';
-    return html;
-}
-
 function displayTable() {
     $('#generated_table_title').html('Current table: ' + table.getType());
     $('#generated_table').html('');
 
     for (var i = 0; i < table.intervalList.length; i = i+2) {
+        var roundNumber = i/2 + 1;
         $('#generated_table').append(
                 '<p>'
-                + '<span class="round-number">' + (i/2+1).toString() + '.</span>'
+                + '<span class="round-number" id="round_number_' + roundNumber + '">' + roundNumber + '.</span>'
                 + createIntervalHTMLElement(table.intervalList, i)
                 + createIntervalHTMLElement(table.intervalList, i+1)
                 + '</p>'
@@ -218,6 +220,15 @@ function displayTable() {
     $('#start_table').prop('disabled', false);
 
     updateButtonsForTablePaused();
+}
+
+function createIntervalHTMLElement(intervalList, intervalIndex){
+    if (typeof(intervalList[intervalIndex]) === 'undefined') {
+        return '';
+    }
+    var html = '<span class="interval" id="table_interval_' + intervalIndex + '">';
+    html += intervalList[intervalIndex].display() + '</span>';
+    return html;
 }
 
 function setCurrentTable(newTable){
@@ -253,6 +264,14 @@ $(document).ready(function() {
         updateButtonsForTablePaused();
     });
 
+    $('#submit_co2').click(function(){
+        $('#co2_table').submit();
+    });
+
+    $('#submit_o2').click(function(){
+        $('#o2_table').submit();
+    });
+
     $('#o2_table').submit(function (e) {
         e.preventDefault();
         updateSettings();
@@ -281,16 +300,24 @@ $(document).ready(function() {
 
     var currentIntervalIndex = '0';
     $(document).on('currentIntervalIndex', function(event){
+        var currentRoundNumber = Math.floor(currentIntervalIndex/2 + 1);
         $('#table_interval_'+currentIntervalIndex).removeClass('active-interval');
-        $('#table_interval_'+event.msg).addClass('active-interval');
+        $('#round_number_'+currentRoundNumber).removeClass('active-interval');
+
         currentIntervalIndex = event.msg;
+        currentRoundNumber = Math.floor(currentIntervalIndex/2 + 1);
+        $('#table_interval_'+currentIntervalIndex).addClass('active-interval');
+        $('#round_number_'+currentRoundNumber).addClass('active-interval');
     });
 
     $(document).on('tableStopped', function(){
         var current_timer = $('#current_timer');
+        var currentRoundNumber = Math.floor(currentIntervalIndex/2 + 1);
         $('#table_interval_'+currentIntervalIndex).removeClass('active-interval');
+        $('#round_number_'+currentRoundNumber).removeClass('active-interval');
         current_timer.html('');
         current_timer.addClass('hidden');
+        updateButtonsForTablePaused();
     });
 });
 </script>

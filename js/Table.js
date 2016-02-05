@@ -4,23 +4,27 @@ var Table = (function(){
         this.numberOfRounds = numberOfRounds;
         this.sound = sound;
         this.intervalList = [];
-        this.fireStart = $.Deferred();
-        this.intervalCompletionPromise = this.fireStart.promise();
-        this.currentInterval = null;
-        this.currentIntervalIndex = 0;
-        this.running = false;
         this.isTryingToGenerateIntervalTooShort = false;
+        _resetTableCounters(this);
     };
 
+    function _resetTableCounters(that) {
+        that.fireStart = $.Deferred();
+        that.intervalCompletionPromise = that.fireStart.promise();
+        that.currentInterval = null;
+        that.currentIntervalIndex = 0;
+        that.isPlaying = false;
+        that.isAleadyStarted = false;
+    }
+
     table.prototype.generate = function(){
-        var that = this;
-        that.isTryingToGenerateIntervalTooShort = false;
+        this.isTryingToGenerateIntervalTooShort = false;
         try{
             this.tryToGenerate();
         }
         catch (error) {
             if (error instanceof IntervalError) {
-                that.isTryingToGenerateIntervalTooShort = true;
+                this.isTryingToGenerateIntervalTooShort = true;
             }
             else {
                 throw error;
@@ -38,16 +42,22 @@ var Table = (function(){
 
     table.prototype.start = function() {
         _checkWeCanStartTable(this);
-        this.running = true;
-        _chainEventsForWholeTable(this);
-        this.fireStart.resolve();
+        this.isPlaying = true;
+        if (this.isAleadyStarted === false) {
+            _chainEventsForWholeTable(this);
+            this.fireStart.resolve();
+            this.isAleadyStarted = true;
+        }
+        else {
+            this.currentInterval.start();
+        }
     };
 
     function _checkWeCanStartTable(that){
         if (that.intervalList.length < 1) {
             throw new Error('Generate the table before starting it.');
         }
-        if (that.running === true) {
+        if (that.isPlaying === true) {
             throw new Error('Table is already running.');
         }
     }
@@ -83,17 +93,15 @@ var Table = (function(){
     }
 
     table.prototype.pause  =function(){
+        this.isPlaying = false;
         this.currentInterval.pause();
     };
 
     table.prototype.stop  =function(){
-        if (this.running === true) {
+        if (this.isPlaying === true) {
             this.currentInterval.pause();
         }
-        this.intervalList = [];
-        this.currentInterval = null;
-        this.intervalCompletionPromise = null;
-        this.running = false;
+        _resetTableCounters(this);
         $.event.trigger({type: 'tableStopped'});
     };
 

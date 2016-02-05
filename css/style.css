@@ -17,6 +17,7 @@ body{
 }
 
 .active-interval {
+    color: darkred;
     font-weight: bold;
     text-decoration: underline;
 }
@@ -62,9 +63,19 @@ body{
     background: rgba(173, 202, 215, 0.6) fixed;
 }
 
+.navbar-header {
+    width: 100%;
+}
+
 .navbar-quote {
     line-height: 20px;
     font-style: italic;
+    float: right;
+    text-align: right;
+}
+
+.btn-control {
+    padding-top: 0.3em;
 }
 
 .right {
