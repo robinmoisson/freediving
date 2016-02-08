@@ -22,7 +22,7 @@ var Sound = (function(){
 })();
 
 var GoogleSound = (function(){
-    var _audioPath = '../sound/google/';
+    var _audioPath = 'sound/google/';
     var _oneAudio = new Audio(_audioPath + '1_one.mp3'),
         _twoAudio = new Audio(_audioPath + '2_two.mp3'),
         _threeAudio = new Audio(_audioPath + '3_three.mp3'),
