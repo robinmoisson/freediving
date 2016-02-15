@@ -43,9 +43,9 @@ var Table = (function(){
         var minutes = Math.floor(total/60);
         total -= minutes * 60;
         var seconds = total;
-        return ((hours > 0) ? (hours+'h') : '')
-            + ((minutes > 0) ? (minutes+'min') : '')
-            + ((seconds > 0) ? (seconds+'s') : '');
+        return ((hours > 0) ? (hours+'h ') : '')
+            + ((minutes > 0) ? (minutes+'min ') : '')
+            + ((seconds > 0) ? (seconds+'s ') : '');
     };
 
     function _calculateTotalDuration(that) {
