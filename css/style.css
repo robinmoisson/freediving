@@ -56,15 +56,15 @@ body{
 }
 
 .main-div {
-    background: rgba(173, 202, 215, 0.6) fixed;
+    background: rgba(173, 202, 215, 0.75) fixed;
 }
 
 .total-time {
     font-weight: bold;
 }
 
-.navbar-header {
-    width: 100%;
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
+    background-color: #08121B;
 }
 
 .navbar-quote {
@@ -89,6 +89,7 @@ body{
 
 footer {
     margin-bottom: 0;
+    margin-top: 2em;
     color: #91b2c2;
     width: 100%;
 }
