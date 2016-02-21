@@ -80,20 +80,23 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <h2>Generate Table</h2>
+                        <div class="inline-title">
+                            <h2>Generate Table</h2>
+                            <button class="btn btn-link" type="button" id="reset">Reset<span class="hidden-xs"> all values</span></button>
+                        </div>
 
                         <div class="form-horizontal">
                             <div class="form-group">
                                 <label for="preparation_time" class="control-label col-sm-3 col-md-2">Initial rest time:</label>
                                 <div class="col-sm-3 col-md-2">
                                     <div class="input-group">
-                                         <input type="number" id="preparation_time" value="45" class="second-input form-control"/>
+                                         <input type="number" id="preparation_time" class="second-input form-control"/>
                                          <div class="input-group-addon">s</div>
                                      </div>
                                 </div>
                                 <label for="round_number" class="control-label col-sm-3 col-md-2">Number of rounds:</label>
                                 <div class="col-sm-3 col-md-2">
-                                    <input type="number" id="round_number" value="9" class="col-xs-2 form-control"/>
+                                    <input type="number" id="round_number" class="col-xs-2 form-control"/>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +111,7 @@
                                 <label for="co2_first_rest" class="control-label col-sm-6">Starting rest time:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="co2_first_rest" name="co2_first_rest" type="number" value="55" class="form-control second-input"/>
+                                        <input id="co2_first_rest" name="co2_first_rest" type="number" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -117,7 +120,7 @@
                                 <label for="co2_decrease_by" class="control-label col-sm-6">Decrease rest time by:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="co2_decrease_by" name="co2_decrease_by" type="number" value="4" class="form-control second-input"/>
+                                        <input id="co2_decrease_by" name="co2_decrease_by" type="number" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -126,7 +129,7 @@
                                 <label for="co2_hold_time" class="control-label col-sm-6">Hold time:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="co2_hold_time" name="co2_hold_time" type="number" value="125" class="form-control second-input"/>
+                                        <input id="co2_hold_time" name="co2_hold_time" type="number" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -147,7 +150,7 @@
                                 <label for="o2_rest" class="control-label col-sm-6">Rest time:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="o2_rest" name="o2_rest" type="number" class="form-control second-input" value="60"/>
+                                        <input id="o2_rest" name="o2_rest" type="number" class="form-control second-input" >
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -156,7 +159,7 @@
                                 <label for="o2_increase_by" class="control-label col-sm-6">Increase hold time by:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="o2_increase_by" name="o2_increase_by" type="number" value="10" class="form-control second-input"/>
+                                        <input id="o2_increase_by" name="o2_increase_by" type="number" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -165,7 +168,7 @@
                                 <label for="o2_max_hold" class="control-label col-sm-6">Max hold time:</label>
                                 <div class="col-sm-5">
                                     <div class="input-group">
-                                        <input id="o2_max_hold" name="o2_max_hold" type="number" value="180" class="form-control second-input"/>
+                                        <input id="o2_max_hold" name="o2_max_hold" type="number" class="form-control second-input"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
@@ -205,6 +208,7 @@
 
 
 var table = null,
+    sound = new GoogleSound(),
     preparation_time,
     round_number,
     o2_rest,
@@ -263,7 +267,7 @@ function createIntervalHTMLElement(intervalList, intervalIndex){
     return html;
 }
 
-function setCurrentTable(newTable){
+function setAndDisplayCurrentTable(newTable){
     if (table !== null) {
         table.stop();
     }
@@ -282,29 +286,94 @@ function updateButtonsForTablePaused(){
     $('#pause_table').prop('disabled', true);
 }
 
-function setInputValueFromCookie(id, defaultValue) {
-    var value = (typeof $.cookie(id) !== 'undefined') ? $.cookie(id) : defaultValue;
+function getSettingDefaultValue(id) {
+    switch (id) {
+        case 'preparation_time':
+            return 45;
+        case 'round_number':
+            return 9;
+        case 'o2_increase_by':
+            return 10;
+        case 'o2_max_hold':
+            return 180;
+        case 'o2_rest':
+            return 60;
+        case 'co2_decrease_by':
+            return 5;
+        case 'co2_first_rest':
+            return 60;
+        case 'co2_hold_time':
+            return 120;
+        default:
+            throw new Error('Trying to set default value for an unknow setting id.');
+    }
+}
+
+function fillSettingValueFromCookieOrDefault(id) {
+    var value = (typeof $.cookie(id) !== 'undefined')
+            ? $.cookie(id)
+            : getSettingDefaultValue(id);
     $('#'+id).val(value);
 }
 
-function loadDefaultValues() {
-    setInputValueFromCookie('preparation_time', 45);
-    setInputValueFromCookie('round_number', 9);
+function resetAndSaveAllSettings() {
+    resetOneSetting('preparation_time');
+    resetOneSetting('round_number');
 
-    setInputValueFromCookie('o2_increase_by', 10);
-    setInputValueFromCookie('o2_max_hold', 180);
-    setInputValueFromCookie('o2_rest', 60);
+    resetOneSetting('o2_increase_by');
+    resetOneSetting('o2_max_hold');
+    resetOneSetting('o2_rest');
 
-    setInputValueFromCookie('co2_decrease_by', 5);
-    setInputValueFromCookie('co2_first_rest', 60);
-    setInputValueFromCookie('co2_hold_time', 120);
+    resetOneSetting('co2_decrease_by');
+    resetOneSetting('co2_first_rest');
+    resetOneSetting('co2_hold_time');
+
+    updateSettings();
+    setCommonCookies();
+    setO2Cookies();
+    setCO2Cookies();
 }
 
-var sound = new GoogleSound();
+function resetOneSetting(id) {
+    $('#'+id).val(getSettingDefaultValue(id));
+}
+
+function fillAllSettingValues() {
+    fillSettingValueFromCookieOrDefault('preparation_time');
+    fillSettingValueFromCookieOrDefault('round_number');
+
+    fillSettingValueFromCookieOrDefault('o2_increase_by');
+    fillSettingValueFromCookieOrDefault('o2_max_hold');
+    fillSettingValueFromCookieOrDefault('o2_rest');
+
+    fillSettingValueFromCookieOrDefault('co2_decrease_by');
+    fillSettingValueFromCookieOrDefault('co2_first_rest');
+    fillSettingValueFromCookieOrDefault('co2_hold_time');
+}
+
+function setO2Cookies() {
+    $.cookie("o2_rest", o2_rest);
+    $.cookie("o2_max_hold", o2_max_hold);
+    $.cookie("o2_increase_by", o2_increase_by);
+}
+
+function setCommonCookies() {
+    $.cookie("preparation_time", preparation_time);
+    $.cookie("round_number", round_number);
+}
+
+function setCO2Cookies() {
+    $.cookie("co2_hold_time", co2_hold_time);
+    $.cookie("co2_first_rest", co2_first_rest);
+    $.cookie("co2_decrease_by", co2_decrease_by);
+}
 
 $(document).ready(function() {
+    fillAllSettingValues();
 
-    loadDefaultValues();
+    $('#reset').click(function(){
+        resetAndSaveAllSettings();
+    });
 
     $('#start_table').click(function(){
         table.start();
@@ -328,26 +397,20 @@ $(document).ready(function() {
         e.preventDefault();
         updateSettings();
         var newTable = new O2Table(preparation_time, round_number, sound, o2_rest, o2_max_hold, o2_increase_by);
-        setCurrentTable(newTable);
+        setAndDisplayCurrentTable(newTable);
 
-        $.cookie("preparation_time", preparation_time);
-        $.cookie("round_number", round_number);
-        $.cookie("o2_rest", o2_rest);
-        $.cookie("o2_max_hold", o2_max_hold);
-        $.cookie("o2_increase_by", o2_increase_by);
+        setCommonCookies();
+        setO2Cookies();
     });
 
     $('#co2_table').submit(function (e) {
         e.preventDefault();
         updateSettings();
         var newTable = new CO2Table(preparation_time, round_number, sound, co2_hold_time, co2_first_rest, co2_decrease_by);
-        setCurrentTable(newTable);
+        setAndDisplayCurrentTable(newTable);
 
-        $.cookie("preparation_time", preparation_time);
-        $.cookie("round_number", round_number);
-        $.cookie("co2_hold_time", co2_hold_time);
-        $.cookie("co2_first_rest", co2_first_rest);
-        $.cookie("co2_decrease_by", co2_decrease_by);
+        setCommonCookies();
+        setCO2Cookies();
     });
 
     $(document).on('beat', function(event){

@@ -109,3 +109,7 @@ input {
     background-color: white;
     border-left: none;
 }
+
+.inline-title > h2 {
+    display: inline-block;
+}
