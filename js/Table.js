@@ -1,7 +1,5 @@
 var Table = (function(){
-    var table = function(preparationTime, numberOfRounds, sound){
-        this.preparationTime = preparationTime;
-        this.numberOfRounds = numberOfRounds;
+    var table = function(sound){
         this.sound = sound;
         this.intervalList = [];
         this.isTryingToGenerateIntervalTooShort = false;
@@ -132,25 +130,34 @@ var Table = (function(){
 var CO2Table = (function(){
     var _type = 'CO2';
 
-    var co2Table = function(preparationTime, numberOfRounds, sound, holdTime, firstRestTime, decreaseBy) {
-        Table.call(this, preparationTime, numberOfRounds, sound);
-        this.holdTime = holdTime;
-        this.firstRestTime = firstRestTime;
-        this.decreaseBy = decreaseBy;
+    var co2Table = function(settings, sound) {
+        Table.call(this, sound);
+
+        var expectedSettings = [
+            'preparationTime',
+            'numberOfRounds',
+            'holdTime',
+            'firstRestTime',
+            'decreaseBy'
+        ];
+        settings.checkHasExpectedSettings(expectedSettings);
+
+        this.settings = settings;
+        this.generate();
     };
 
     co2Table.prototype = Object.create(Table.prototype);
     co2Table.prototype.constructor = co2Table;
 
     co2Table.prototype.tryToGenerate = function(){
-        var preparationInterval = new BreathingInterval(this.preparationTime, this.sound);
+        var preparationInterval = new BreathingInterval(this.settings.get('preparationTime'), this.sound);
         this.intervalList.push(preparationInterval);
 
-        for (var i = 0; i < this.numberOfRounds; i++) {
+        for (var i = 0; i < this.settings.get('numberOfRounds'); i++) {
             var holdInterval = new HoldingInterval(this.holdTime, this.sound);
             this.intervalList.push(holdInterval);
 
-            if (i+1 === this.numberOfRounds)
+            if (i+1 === this.settings.get('numberOfRounds'))
                 continue;
             var restTime = _getBreatheTimeForRoundNumber(this, i);
             var breatheInterval = new BreathingInterval(restTime, this.sound);
@@ -158,16 +165,16 @@ var CO2Table = (function(){
         }
     };
 
+    function _getBreatheTimeForRoundNumber(that, roundIndex){
+        if (roundIndex > that.settings.get('numberOfRounds')) {
+            throw new Error('The round index is too high.');
+        }
+        return that.settings.get('firstRestTime') - roundIndex*that.settings.get('decreaseBy');
+    }
+
     co2Table.prototype.getType = function(){
         return _type;
     };
-
-    function _getBreatheTimeForRoundNumber(that, roundIndex){
-        if (roundIndex > that.numberOfRounds) {
-            throw new Error('The round index is too high.');
-        }
-        return that.firstRestTime - roundIndex*that.decreaseBy;
-    }
 
     return co2Table;
 })();
@@ -176,42 +183,51 @@ var CO2Table = (function(){
 var O2Table = (function(){
     var _type = 'O2';
 
-    var o2Table = function(preparationTime, numberOfRounds, sound, restTime, maxHoldTime, increaseBy) {
-        Table.call(this, preparationTime, numberOfRounds, sound);
-        this.restTime = restTime;
-        this.maxHoldTime = maxHoldTime;
-        this.increaseBy = increaseBy;
+    var o2Table = function(settings, sound) {
+        Table.call(this, sound);
+
+        var expectedSettings = [
+            'preparationTime',
+            'numberOfRounds',
+            'restTime',
+            'maxHoldTime',
+            'increaseBy'
+        ];
+        settings.checkHasExpectedSettings(expectedSettings);
+
+        this.settings = settings;
+        this.generate();
     };
 
     o2Table.prototype = Object.create(Table.prototype);
     o2Table.prototype.constructor = o2Table;
 
     o2Table.prototype.tryToGenerate = function(){
-        var preparationInterval = new BreathingInterval(this.preparationTime, this.sound);
+        var preparationInterval = new BreathingInterval(this.settings.get('preparationTime'), this.sound);
         this.intervalList.push(preparationInterval);
 
-        for (var i = 0; i < this.numberOfRounds; i++) {
+        for (var i = 0; i < this.settings.get('numberOfRounds'); i++) {
             var holdTime = _getHoldTimeForRoundNumber(this, i);
             var holdInterval = new HoldingInterval(holdTime, this.sound);
             this.intervalList.push(holdInterval);
 
-            if (i+1 === this.numberOfRounds)
+            if (i+1 === this.settings.get('numberOfRounds'))
                 continue;
-            var breatheInterval = new BreathingInterval(this.restTime, this.sound);
+            var breatheInterval = new BreathingInterval(this.settings.get('restTime'), this.sound);
             this.intervalList.push(breatheInterval);
         }
     };
 
+    function _getHoldTimeForRoundNumber(that, roundIndex){
+        if (roundIndex > that.settings.get('numberOfRounds')) {
+            throw new Error('The round index is too high.');
+        }
+        return that.settings.get('maxHoldTime') + that.settings.get('increaseBy')*(roundIndex+1 - that.settings.get('numberOfRounds'));
+    }
+
     o2Table.prototype.getType = function(){
         return _type;
     };
-
-    function _getHoldTimeForRoundNumber(that, roundIndex){
-        if (roundIndex > that.numberOfRounds) {
-            throw new Error('The round index is too high.');
-        }
-        return that.maxHoldTime + that.increaseBy*(roundIndex+1 - that.numberOfRounds);
-    }
 
     return o2Table;
 })();

@@ -113,3 +113,11 @@ input {
 .inline-title > h2 {
     display: inline-block;
 }
+
+.inline-title {
+    margin-bottom: 5px;
+}
+
+.reset {
+    margin-bottom: 2px;
+}
