@@ -1,7 +1,6 @@
 var Sound = (function(){
     var sound = function Sound(){};
 
-
     sound.prototype.playCountdownAt = function() {
         throw new Error('Method should be overridden.');
     };
@@ -33,6 +32,7 @@ var GoogleSound = (function(){
         _eightAudio = new Audio(_audioPath + '8_eight.mp3'),
         _nineAudio = new Audio(_audioPath + '9_nine.mp3'),
         _tenAudio = new Audio(_audioPath + '10_ten.mp3'),
+        _fifteenAudio = new Audio(_audioPath + '15_fifteen.mp3'),
         _twentyAudio = new Audio(_audioPath + '20_twenty.mp3'),
         _thirtyAudio = new Audio(_audioPath + '30_thirty.mp3'),
         _holdAudio = new Audio(_audioPath + 'hold.mp3'),
@@ -78,6 +78,9 @@ var GoogleSound = (function(){
                 break;
             case 10:
                 _tenAudio.play();
+                break;
+            case 15:
+                _fifteenAudio.play();
                 break;
 
             case 20:
@@ -155,6 +158,7 @@ var BeepSound = (function(){
             case 8:
             case 9:
             case 10:
+            case 15:
                 this.playNBeep(1);
                 break;
 

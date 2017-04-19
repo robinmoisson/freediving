@@ -1,8 +1,8 @@
 var Interval = (function(){
 
     var interval = function Interval(duration, sound) {
-        if (duration < 12) {
-            throw new IntervalError('Interval duration has to be more than 12s.');
+        if (duration < 2) {
+            throw new IntervalError('Interval duration has to be more than 2s.');
         }
 
         this.duration = duration;
