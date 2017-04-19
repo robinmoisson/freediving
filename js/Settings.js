@@ -23,10 +23,10 @@ var Settings = (function(){
     }
 
     settings.prototype.get = function(settingName) {
-        return this.settings[settingName];
+        return parseInt(this.settings[settingName]);
     };
 
-    settings.prototype.save = function(){
+    settings.prototype.saveToCookie = function(){
         var that = this;
         $.each(that.settings, function(settingName){
             $.cookie(settingName, that.settings[settingName]);
@@ -59,4 +59,6 @@ var Settings = (function(){
             $('#' + value.selectorId).val(that.settings[settingName]);
         });
     };
+
+    return settings;
 })();

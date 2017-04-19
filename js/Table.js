@@ -2,7 +2,7 @@ var Table = (function(){
     var table = function(sound){
         this.sound = sound;
         this.intervalList = [];
-        this.isTryingToGenerateIntervalTooShort = false;
+        this.errorMsg = null;
         _resetTableCounters(this);
     };
 
@@ -16,13 +16,13 @@ var Table = (function(){
     }
 
     table.prototype.generate = function(){
-        this.isTryingToGenerateIntervalTooShort = false;
+        this.errorMsg = null;
         try{
             this.tryToGenerate();
         }
         catch (error) {
             if (error instanceof IntervalError) {
-                this.isTryingToGenerateIntervalTooShort = true;
+                this.errorMsg = error.message;
             }
             else {
                 throw error;
@@ -154,7 +154,7 @@ var CO2Table = (function(){
         this.intervalList.push(preparationInterval);
 
         for (var i = 0; i < this.settings.get('numberOfRounds'); i++) {
-            var holdInterval = new HoldingInterval(this.holdTime, this.sound);
+            var holdInterval = new HoldingInterval(this.settings.get('holdTime'), this.sound);
             this.intervalList.push(holdInterval);
 
             if (i+1 === this.settings.get('numberOfRounds'))

@@ -232,7 +232,7 @@
                 return _HTMLIds[id];
             },
             getJqueryObject: function(id){
-                return $('#' + HTMLIds[id]);
+                return $('#' + _HTMLIds[id]);
             }
         };
     })();
@@ -244,19 +244,19 @@ var defaultSettings = {
             value: 45,
             selectorId: 'preparation_time'
         },
-        roundTotalNumber: {
+        numberOfRounds: {
             value: 9,
             selectorId: 'round_number'
         },
         restTime: {
             value: 60,
-            selectorId: 'o2_rest_time'
+            selectorId: 'o2_rest'
         },
         increaseBy: {
             value: 10,
             selectorId: 'o2_increase_by'
         },
-        maxHold: {
+        maxHoldTime: {
             value: 180,
             selectorId: 'o2_max_hold'
         }
@@ -266,11 +266,11 @@ var defaultSettings = {
             value: 45,
             selectorId: 'preparation_time'
         },
-        roundTotalNumber: {
+        numberOfRounds: {
             value: 9,
             selectorId: 'round_number'
         },
-        firstRest: {
+        firstRestTime: {
             value: 60,
             selectorId: 'co2_first_rest'
         },
@@ -294,10 +294,14 @@ var tables = {
 var currentTable = null;
 
 $(document).ready(function() {
+    $.each(tables, function(key, table){
+        table.settings.updateDisplay();
+    });
+
     $('#reset_all').click(function(){
         $.each(tables, function(key, table){
             table.settings.reset();
-            table.settings.save();
+            table.settings.saveToCookie();
         });
     });
 
@@ -322,9 +326,11 @@ $(document).ready(function() {
     $('#o2_table').submit(function (e) {
         e.preventDefault();
 
-        tables.O2 = new O2Table(defaultSettings.O2, sound);
-        tables.O2.settings.updateFromUI();
-        tables.O2.settings.save();
+        var settings = new Settings(defaultSettings.O2);
+        settings.updateFromUI();
+
+        tables.O2 = new O2Table(settings, sound);
+        tables.O2.settings.saveToCookie();
 
         setAndDisplayNewTable(tables.O2);
     });
@@ -332,9 +338,11 @@ $(document).ready(function() {
     $('#co2_table').submit(function (e) {
         e.preventDefault();
 
-        tables.CO2 = new CO2Table(defaultSettings.CO2, sound);
-        tables.CO2.settings.updateFromUI();
-        tables.CO2.settings.save();
+        var settings = new Settings(defaultSettings.CO2);
+        settings.updateFromUI();
+
+        tables.CO2 = new CO2Table(settings, sound);
+        tables.CO2.settings.saveToCookie();
 
         setAndDisplayNewTable(tables.CO2);
     });
@@ -383,15 +391,17 @@ function setAndDisplayNewTable(newTable){
 }
 
 function displayTable() {
+    var generatedTable = $('#generated_table');
+
     $('#generated_table_title').html('Current table: ' + currentTable.getType());
-    $('#generated_table').html('');
+    generatedTable.html('');
     $('#total_time').html('Total time: ' + currentTable.getTotalDurationString());
 
     var htmlTable = createHTMLTable();
-    $('#generated_table').append(htmlTable);
+    generatedTable.append(htmlTable);
 
-    if (currentTable.isTryingToGenerateIntervalTooShort === true) {
-        $('#generated_table').append('<p class="interval-too-short">You reached the minimum interval length of 12s.</p>');
+    if (currentTable.errorMsg) {
+        generatedTable.append('<p class="interval-too-short">' + currentTable.errorMsg + '</p>');
     }
 
     updateButtonsForTablePaused();
@@ -411,6 +421,7 @@ function createHTMLTable(){
                 + createIntervalHTMLElement(currentTable.intervalList, i+1)
                 + '</p>';
     }
+    return html;
 }
 
 function createIntervalHTMLElement(intervalList, intervalIndex){
