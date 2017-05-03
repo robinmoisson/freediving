@@ -205,6 +205,7 @@
 <script src="js/lib/jquery-1.12.0.min.js"></script>
 <script src="js/lib/bootstrap.min.js"></script>
 <script src="js/lib/jquery.cookie.js"></script>
+<script src="js/lib/NoSleep.js"></script>
 
 <script src="js/Error.js"></script>
 <script src="js/Settings.js"></script>
@@ -212,6 +213,7 @@
 <script src="js/Interval.js"></script>
 <script src="js/Table.js"></script>
 <script>
+    var noSleep = new NoSleep();
 
     var HTMLIds = (function(){
         var _htmlIds = {
@@ -457,11 +459,13 @@ function createIntervalHTMLElement(intervalList, intervalIndex){
 function updateButtonsForTableRunning(){
     $('#start_table').prop('disabled', true);
     $('#pause_table').prop('disabled', false);
+    noSleep.enable();
 }
 
 function updateButtonsForTablePaused(){
     $('#start_table').prop('disabled', false);
     $('#pause_table').prop('disabled', true);
+    noSleep.disable();
 }
 
 </script>
