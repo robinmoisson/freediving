@@ -64,7 +64,10 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-6">
-                        <p id="current_timer" class="timer text-center hidden"></p>
+                        <div id="timer" class="timer text-center hidden">
+                            <p id="timer_title"></p>
+                            <p id="timer_remaining" class="timer-remaining"></p>
+                        </div>
                     </div>
 
                 </div>
@@ -97,6 +100,9 @@
                                 <label for="round_number" class="control-label col-sm-3 col-md-2">Number of rounds:</label>
                                 <div class="col-sm-3 col-md-2">
                                     <input type="number" id="round_number" class="col-xs-2 form-control"/>
+                                </div>
+                                <div class="checkbox col-sm-6 col-md-4">
+                                    <label><input type="checkbox" id="is_playing_help_countdown" checked/>Motivation countdown <abbr title="Will give you your remaining time during breath hold at 60, 30 and 15s mark">?</abbr></label>
                                 </div>
                             </div>
                         </div>
@@ -259,6 +265,11 @@ var defaultSettings = {
         maxHoldTime: {
             value: 180,
             selectorId: 'o2_max_hold'
+        },
+        isPlayingHelpCountdown: {
+            value: true,
+            selectorId: 'is_playing_help_countdown',
+            type: 'checkbox'
         }
     },
     CO2: {
@@ -281,6 +292,11 @@ var defaultSettings = {
         holdTime: {
             value: 120,
             selectorId: 'co2_hold_time'
+        },
+        isPlayingHelpCountdown: {
+            value: true,
+            selectorId: 'is_playing_help_countdown',
+            type: 'checkbox'
         }
     }
 };
@@ -340,6 +356,7 @@ $(document).ready(function() {
 
         var settings = new Settings(defaultSettings.CO2);
         settings.updateFromUI();
+        console.log(settings.get('isPlayingHelpCountdown'));
 
         tables.CO2 = new CO2Table(settings, sound);
         tables.CO2.settings.saveToCookie();
@@ -348,11 +365,12 @@ $(document).ready(function() {
     });
 
     $(document).on('beat', function(event){
-        var current_timer = $('#current_timer');
-        if (current_timer.hasClass('hidden') === true) {
-            current_timer.removeClass('hidden');
-        }
-        current_timer.html(event.msg);
+        var timer = $('#timer');
+        timer.removeClass('hidden');
+        timer.css('color', event.color);
+
+        $('#timer_title').text(event.intervalType);
+        $('#timer_remaining').text(event.remaining);
     });
 
     $(document).on('tableCompleted', function(event){
@@ -372,12 +390,15 @@ $(document).ready(function() {
     });
 
     $(document).on('tableStopped', function(){
-        var current_timer = $('#current_timer');
         var currentRoundNumber = Math.floor(currentIntervalIndex/2 + 1);
         $('#table_interval_'+currentIntervalIndex).removeClass('active-interval');
         $('#round_number_'+currentRoundNumber).removeClass('active-interval');
-        current_timer.html('');
-        current_timer.addClass('hidden');
+
+        var timer = $('#timer');
+        timer.addClass('hidden');
+        timer.css('color', 'white');
+        $('#timer_title').text('');
+        $('#timer_remaining').text('');
         updateButtonsForTablePaused();
     });
 });

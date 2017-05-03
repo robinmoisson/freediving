@@ -121,3 +121,7 @@ input {
 .reset {
     margin-bottom: 2px;
 }
+
+.timer-remaining {
+    font-size: 4em;
+}

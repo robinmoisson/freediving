@@ -154,7 +154,7 @@ var CO2Table = (function(){
         this.intervalList.push(preparationInterval);
 
         for (var i = 0; i < this.settings.get('numberOfRounds'); i++) {
-            var holdInterval = new HoldingInterval(this.settings.get('holdTime'), this.sound);
+            var holdInterval = new HoldingInterval(this.settings.get('holdTime'), this.sound, this.settings.get('isPlayingHelpCountdown'));
             this.intervalList.push(holdInterval);
 
             if (i+1 === this.settings.get('numberOfRounds'))
@@ -208,7 +208,7 @@ var O2Table = (function(){
 
         for (var i = 0; i < this.settings.get('numberOfRounds'); i++) {
             var holdTime = _getHoldTimeForRoundNumber(this, i);
-            var holdInterval = new HoldingInterval(holdTime, this.sound);
+            var holdInterval = new HoldingInterval(holdTime, this.sound, this.settings.get('isPlayingHelpCountdown'));
             this.intervalList.push(holdInterval);
 
             if (i+1 === this.settings.get('numberOfRounds'))

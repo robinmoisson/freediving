@@ -1,15 +1,19 @@
 var Interval = (function(){
 
+    var minDuration = 4;
+
     var interval = function Interval(duration, sound) {
-        if (duration < 2) {
-            throw new IntervalError('Interval duration has to be more than 2s.');
+        if (duration < minDuration) {
+            duration = minDuration;
         }
 
         this.duration = duration;
         this.remaining = duration;
+        this.color = 'white';
         this.sound = sound;
         this.finished = $.Deferred();
         this.timer = null;
+        this.playCountdownAtThese = [];
     };
 
     interval.prototype.start = function() {
@@ -26,6 +30,8 @@ var Interval = (function(){
             },
             1000
         );
+
+        that.playStartSound();
 
         return that.finished.promise();
     };
@@ -55,12 +61,29 @@ var Interval = (function(){
     interval.prototype.beat = function() {
         $.event.trigger({
             type: 'beat',
-            msg: this.getType() + ' for ' + this.remaining + 's'
-        })
+            intervalType: this.getType(),
+            remaining: this.remaining + 's',
+            color: this.getColor()
+        });
+
+        this.playBeatSound(this.remaining);
+    };
+
+    interval.prototype.playStartSound = function() {};
+
+    interval.prototype.getColor = function() {
+        return this.color;
+    };
+
+    interval.prototype.playBeatSound = function(remainingTime) {
+        if (this.playCountdownAtThese.indexOf(remainingTime) !== -1) {
+            this.sound.playCountdownAt(this.remaining);
+        }
     };
 
     interval.prototype.getType = function() {
-        throw new Error('Method should be overridden.');
+        return this.type;
+        // throw new Error('Method should be overridden.');
     };
 
     interval.prototype.display = function() {
@@ -75,24 +98,15 @@ var BreathingInterval = (function(){
     var breathingInterval = function BreathingInterval(duration, sound) {
         Interval.call(this, duration, sound);
         this.type = 'BREATHE';
+        this.color = 'green';
+        this.playCountdownAtThese = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30];
     };
 
     breathingInterval.prototype = Object.create(Interval.prototype);
     breathingInterval.constructor = breathingInterval;
 
-    breathingInterval.prototype.beat = function() {
-        Interval.prototype.beat.call(this);
-        this.sound.playCountdownAt(this.remaining);
-    };
-
-    breathingInterval.prototype.start = function() {
-        var promise = Interval.prototype.start.call(this);
+    breathingInterval.prototype.playStartSound = function() {
         this.sound.playBreathe();
-        return promise;
-    };
-
-    breathingInterval.prototype.getType = function(){
-        return this.type;
     };
 
     return breathingInterval;
@@ -100,22 +114,18 @@ var BreathingInterval = (function(){
 
 
 var HoldingInterval = (function(){
-    var holdingInterval = function HoldingInterval(duration, sound) {
+    var holdingInterval = function HoldingInterval(duration, sound, isPlayingCountdown) {
         Interval.call(this, duration, sound);
         this.type = 'HOLD';
+        this.color = 'red';
+        this.playCountdownAtThese = isPlayingCountdown ? [60, 30, 15] : [];
     };
 
     holdingInterval.prototype = Object.create(Interval.prototype);
     holdingInterval.prototype.constructor = holdingInterval;
 
-    holdingInterval.prototype.start = function() {
-        var promise = Interval.prototype.start.call(this);
+    holdingInterval.prototype.playStartSound = function() {
         this.sound.playHold();
-        return promise;
-    };
-
-    holdingInterval.prototype.getType = function(){
-        return this.type;
     };
 
     return holdingInterval;

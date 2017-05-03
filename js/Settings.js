@@ -23,7 +23,11 @@ var Settings = (function(){
     }
 
     settings.prototype.get = function(settingName) {
-        return parseInt(this.settings[settingName]);
+        var value = this.settings[settingName];
+        if (typeof value === 'boolean') {
+            return value;
+        }
+        return parseInt(value);
     };
 
     settings.prototype.saveToCookie = function(){
@@ -49,7 +53,12 @@ var Settings = (function(){
     settings.prototype.updateFromUI = function(){
         var that = this;
         $.each(that.getDefaultSettings(), function(settingName, value) {
-            that.settings[settingName] = $('#' + value.selectorId).val();
+            var element= $('#' + value.selectorId);
+            if (value.type === 'checkbox') {
+                that.settings[settingName] = element.is(':checked');
+                return;
+            }
+            that.settings[settingName] = element.val();
         });
     };
 

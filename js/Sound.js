@@ -35,6 +35,7 @@ var GoogleSound = (function(){
         _fifteenAudio = new Audio(_audioPath + '15_fifteen.mp3'),
         _twentyAudio = new Audio(_audioPath + '20_twenty.mp3'),
         _thirtyAudio = new Audio(_audioPath + '30_thirty.mp3'),
+        _sixtyAudio = new Audio(_audioPath + '60_oneminute.mp3'),
         _holdAudio = new Audio(_audioPath + 'hold.mp3'),
         _breatheAudio = new Audio(_audioPath + 'breathe.mp3'),
         _tableCompletedAudio = new Audio(_audioPath + 'completed.mp3');
@@ -89,6 +90,9 @@ var GoogleSound = (function(){
 
             case 30:
                 _thirtyAudio.play();
+                break;
+            case 60:
+                _sixtyAudio.play();
                 break;
         }
     };
