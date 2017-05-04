@@ -118,7 +118,7 @@ var HoldingInterval = (function(){
         Interval.call(this, duration, sound);
         this.type = 'HOLD';
         this.color = 'red';
-        this.playCountdownAtThese = isPlayingCountdown ? [60, 30, 15] : [];
+        this.playCountdownAtThese = isPlayingCountdown ? [60, 30, 15, 10, 5] : [];
     };
 
     holdingInterval.prototype = Object.create(Interval.prototype);
