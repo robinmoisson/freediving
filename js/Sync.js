@@ -16,9 +16,11 @@ var Sync = (function () {
         }
 
         $('.syncing').text('Syncing...');
-        $.post(
-            url + "/training-sessions/" + table.uuid,
-            {
+        $.ajax({
+            type: "PUT",
+            url: url + "/training-sessions/" + table.uuid,
+            contentType: "application/json",
+            data: {
                 "email": that.email,
                 "time_holding_total": table.totalHoldingTime,
                 "time_breathing_total": table.totalBreathingTime,
@@ -26,7 +28,7 @@ var Sync = (function () {
                 "updated_at": timestamp,
                 "table_type": table.getType()
             }
-        ).done(function(){
+        }).done(function(){
             $('.syncing').text('Syncing complete !');
             setTimeout(function() {
                 $('.syncing').text('');
