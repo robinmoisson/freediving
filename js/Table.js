@@ -160,7 +160,7 @@ var Table = (function () {
      * @param totalDuration
      */
     table.prototype.handleBreathingFinish = function (totalDuration) {
-        if (this.minBreathingTime > totalDuration) {
+        if (this.minBreathingTime === null || this.minBreathingTime > totalDuration) {
             this.minBreathingTime = totalDuration;
         }
         this.totalBreathingTime += totalDuration;
