@@ -49,7 +49,6 @@
                             <li class="active"><a href="/freediving" id="home-url">Tables</a></li>
                             <li><a href="/freediving/static.html">Experiencing static</a></li>
                         </ul>
-                        <!--<p class="navbar-text navbar-quote pull-right hidden-xs">"Be a little kinder" Aldous Huxley</p>-->
                         <div class="login navbar-right"></div>
 
                     </div>
@@ -474,7 +473,7 @@
     }
 
     function showLogout() {
-        var logoutHtml = '<a href="#" class="logout navbar-text">Logout</a>';
+        var logoutHtml = '<span class="syncing navbar-text"></span> <a href="#" class="logout navbar-text">Logout</a>';
         $('div.login').html(logoutHtml);
     }
 

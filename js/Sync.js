@@ -15,7 +15,7 @@ var Sync = (function () {
             return;
         }
 
-        // TODO: show sync is in progress
+        $('.syncing').text('Syncing...');
         $.post(
             url + "/training-sessions/" + table.uuid,
             {
@@ -27,9 +27,15 @@ var Sync = (function () {
                 "table_type": table.getType()
             }
         ).done(function(){
-            // TODO: show sync is done
+            $('.syncing').text('Syncing complete !');
+            setTimeout(function() {
+                $('.syncing').text('');
+            }, 3000);
         }).fail(function(){
-            // TODO: show sync is failed
+            $('.syncing').text('Syncing failed :/');
+            setTimeout(function() {
+                $('.syncing').text('');
+            }, 3000);
         });
     };
 
