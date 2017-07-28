@@ -19,7 +19,6 @@ var Sync = (function () {
         $.ajax({
             type: "PUT",
             url: url + "/training-sessions/" + table.uuid,
-            contentType: "application/json",
             data: {
                 "email": that.email,
                 "time_holding_total": table.totalHoldingTime,
