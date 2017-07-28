@@ -126,3 +126,9 @@ div.login {
     height: 34px;
     margin-left: 0.5em;
 }
+
+.navbar-label {
+    font-size: 1em;
+    float: left;
+    margin: 15px;
+}

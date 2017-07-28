@@ -340,7 +340,7 @@
         var email = $.cookie('email');
         if (email) {
             sync.logIn(email);
-            showLogout();
+            showLogout(email);
         }
         else {
             showLogin();
@@ -447,13 +447,13 @@
             var email = $('#email').val().trim();
             sync.logIn(email);
 
-            showLogout();
+            showLogout(email);
         });
 
         /**
          * Handle logout
          */
-        $(document).on('click', 'a.logout', function(e) {
+        $(document).on('click', 'a.logout', function (e) {
             e.preventDefault();
 
             sync.logOut();
@@ -472,8 +472,10 @@
         $('div.login').html(loginHtml);
     }
 
-    function showLogout() {
-        var logoutHtml = '<span class="syncing navbar-text"></span> <a href="#" class="logout navbar-text">Logout</a>';
+    function showLogout(email) {
+        var logoutHtml = '<span class="syncing navbar-text"></span> ' +
+            '<span class="navbar-label label label-primary">' + email + '</span>' +
+            '<a href="#" class="logout navbar-text">Logout</a>';
         $('div.login').html(logoutHtml);
     }
 
