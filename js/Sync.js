@@ -1,6 +1,6 @@
 var Sync = (function () {
 
-    var url = 'http://freediving.robinmoisson.com/api';
+    var url = 'https://freediving.robinmoisson.com/api';
 
     var sync = function(){
         this.email = null;
