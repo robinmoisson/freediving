@@ -23,6 +23,7 @@ var Sync = (function () {
                 "email": that.email,
                 "time_holding_total": table.totalHoldingTime,
                 "time_breathing_total": table.totalBreathingTime,
+                "time_breathing_min": table.minBreathingTime,
                 "holding_count": table.holdingCount,
                 "updated_at": timestamp,
                 "table_type": table.getType()

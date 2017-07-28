@@ -20,7 +20,7 @@ var Table = (function () {
 
         this.totalHoldingTime = 0;
         this.totalBreathingTime = 0;
-        this.minBreathingTime = 0;
+        this.minBreathingTime = null;
         this.holdingCount = 0;
 
         _resetTableCounters(this);
