@@ -67,14 +67,6 @@ body{
     background-color: #08121B;
 }
 
-.navbar-quote {
-    color: #7892a3 !important;
-    line-height: 20px;
-    font-style: italic;
-    float: right;
-    text-align: right;
-}
-
 .btn-control {
     padding-top: 0.3em;
 }
@@ -124,4 +116,13 @@ input {
 
 .timer-remaining {
     font-size: 4em;
+}
+
+div.login {
+    display: inline-block;
+}
+
+.login button {
+    height: 34px;
+    margin-left: 0.5em;
 }

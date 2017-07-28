@@ -2,11 +2,17 @@ var Interval = (function(){
 
     var minDuration = 4;
 
-    var interval = function Interval(duration, sound) {
+    /**
+     * @param table: the table which contains that interval
+     * @param duration: the interval duration in seconds
+     * @param sound: the sound provider
+     */
+    var interval = function Interval(table, duration, sound) {
         if (duration < minDuration) {
             duration = minDuration;
         }
 
+        this.table = table;
         this.duration = duration;
         this.remaining = duration;
         this.color = 'white';
@@ -42,8 +48,13 @@ var Interval = (function(){
         }
         else {
             that.stop();
+            that.handleFinish();
         }
     }
+
+    interval.prototype.handleFinish = function() {
+         throw Error('Method should be overriden');
+    };
 
     interval.prototype.pause = function() {
         clearInterval(this.timer);
@@ -95,8 +106,8 @@ var Interval = (function(){
 
 
 var BreathingInterval = (function(){
-    var breathingInterval = function BreathingInterval(duration, sound) {
-        Interval.call(this, duration, sound);
+    var breathingInterval = function BreathingInterval(table, duration, sound) {
+        Interval.call(this, table, duration, sound);
         this.type = 'BREATHE';
         this.color = 'green';
         this.playCountdownAtThese = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30];
@@ -109,13 +120,17 @@ var BreathingInterval = (function(){
         this.sound.playBreathe();
     };
 
+    breathingInterval.prototype.handleFinish = function() {
+        this.table.handleBreathingFinish(this.duration);
+    };
+
     return breathingInterval;
 })();
 
 
 var HoldingInterval = (function(){
-    var holdingInterval = function HoldingInterval(duration, sound, isPlayingCountdown) {
-        Interval.call(this, duration, sound);
+    var holdingInterval = function HoldingInterval(table, duration, sound, isPlayingCountdown) {
+        Interval.call(this, table, duration, sound);
         this.type = 'HOLD';
         this.color = 'red';
         this.playCountdownAtThese = isPlayingCountdown ? [60, 30, 15, 10, 5] : [];
@@ -123,6 +138,10 @@ var HoldingInterval = (function(){
 
     holdingInterval.prototype = Object.create(Interval.prototype);
     holdingInterval.prototype.constructor = holdingInterval;
+
+    holdingInterval.prototype.handleFinish = function() {
+        this.table.handleHoldingFinish(this.duration);
+    };
 
     holdingInterval.prototype.playStartSound = function() {
         this.sound.playHold();
