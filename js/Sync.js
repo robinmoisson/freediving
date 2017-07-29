@@ -1,6 +1,7 @@
 var Sync = (function () {
 
-    var url = 'https://freediving.robinmoisson.com/api';
+    // var url = 'https://freediving.robinmoisson.com/api';
+    var url = 'http://localhost:5000';
 
     var sync = function(){
         this.email = null;
@@ -39,6 +40,49 @@ var Sync = (function () {
                 $('.syncing').text('');
             }, 3000);
         });
+    };
+
+    /**
+     * Refresh history, update table data in the display
+     */
+    sync.prototype.refreshHistory = function() {
+        if (!this.email) {
+            throw new Error('You need to be logged in to get your history');
+        }
+
+        $('.syncing').text('Updating history...');
+        $.get(url + '/training-sessions?email=' + encodeURIComponent(this.email))
+            .done(function(data){
+                $('.syncing').text('');
+                var tbody = $('tbody.history');
+
+                // show no history if we don't get anything
+                if (data.length === 0) {
+                    tbody.html('<tr><td colspan="100">No history yet</td></tr>');
+                    return;
+                }
+
+                // loop through all result, appending them to new html content
+                var tbodyHTML = '';
+                $.each(data, function(key, trainingSession) {
+                    tbodyHTML+= '<tr>' +
+                        '<td>' + trainingSession.date + '</td>' +
+                        '<td>' + trainingSession.table_type + '</td>' +
+                        '<td>' + trainingSession.holding_count + '</td>' +
+                        '<td>' + helper.getDisplayDurationString(parseInt(trainingSession.time_breathing_total) + parseInt(trainingSession.time_holding_total)) + '</td>' +
+                        '<td>' + helper.getDisplayDurationString(trainingSession.time_holding_total) + '</td>' +
+                        '<td>' + helper.getDisplayDurationString(trainingSession.time_breathing_min) + '</td>' +
+                        '<td>' + (trainingSession.is_completed ? '&#10004;' : '&#x2717;') + '</td>' +
+                        '</tr>';
+                });
+                tbody.html(tbodyHTML);
+            })
+            .fail(function(){
+                $('.syncing').text('History update failed :/');
+                setTimeout(function() {
+                    $('.syncing').text('');
+                }, 3000);
+            });
     };
 
     sync.prototype.logIn = function(email) {

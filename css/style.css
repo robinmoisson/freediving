@@ -132,3 +132,7 @@ div.login {
     float: left;
     margin: 15px;
 }
+
+.navbar-text a {
+    color: inherit;
+}

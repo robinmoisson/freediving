@@ -3,7 +3,7 @@ function IntervalError(){
     temp.name = this.name = 'IntervalError';
     this.stack = temp.stack;
     this.message = temp.message;
-};
+}
 
 IntervalError.prototype = Object.create(Error.prototype, {
     constructor: {
