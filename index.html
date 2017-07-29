@@ -79,9 +79,9 @@
                         </tr>
                         </thead>
                         <tbody class="history">
-                            <tr>
-                                <td colspan="100">No history yet</td>
-                            </tr>
+                        <tr>
+                            <td colspan="100">No history yet</td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -491,7 +491,7 @@
         /**
          * Toggle/reload history block
          */
-        $('.toggle-history').click(function(){
+        $(document).on('click', '.toggle-history', function () {
             var historyBlock = $('div.history');
             var isVisible = !historyBlock.hasClass('hidden');
 
@@ -509,7 +509,7 @@
         /**
          * Reload history data
          */
-        $('.refresh-history').click(function(){
+        $(document).on('click', '.refresh-history', function () {
             sync.refreshHistory();
         });
 
@@ -523,6 +523,11 @@
             '<button class="btn btn-primary">Log In</button>' +
             '</form>';
         $('div.login').html(loginHtml);
+
+        var historyBlock = $('div.history');
+        if (!historyBlock.hasClass('hidden')) {
+            historyBlock.addClass('hidden');
+        }
     }
 
     function showLogout(email) {
