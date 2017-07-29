@@ -17,6 +17,7 @@ var Table = (function () {
         this.sync = sync;
         this.intervalList = [];
         this.errorMsg = null;
+        this.isCompleted = false;
 
         this.totalHoldingTime = 0;
         this.totalBreathingTime = 0;
@@ -97,10 +98,15 @@ var Table = (function () {
         _chainAllIntervalsToTable(that);
         that.intervalCompletionPromise.then(function () {
             that.stop();
+            that.isCompleted = true;
+
             $.event.trigger({
                 type: 'tableCompleted'
             });
             that.sound.playTableCompleted();
+
+            // sync to server
+            sync.syncTable(that);
         });
     }
 

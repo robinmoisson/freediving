@@ -1,7 +1,6 @@
 var Sync = (function () {
 
-    // var url = 'https://freediving.robinmoisson.com/api';
-    var url = 'http://localhost:5000';
+    var url = 'https://freediving.robinmoisson.com/api';
 
     var sync = function(){
         this.email = null;
@@ -27,7 +26,8 @@ var Sync = (function () {
                 "time_breathing_min": table.minBreathingTime,
                 "holding_count": table.holdingCount,
                 "updated_at": timestamp,
-                "table_type": table.getType()
+                "table_type": table.getType(),
+                "is_completed": table.isCompleted
             }
         }).done(function(){
             $('.syncing').text('Syncing complete !');
