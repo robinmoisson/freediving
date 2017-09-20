@@ -141,3 +141,11 @@ div.login {
     width: 100%;
     overflow-x: scroll;
 }
+
+div.modal-dialog {
+    margin-top: 8em;
+}
+
+.navbar-left-margin {
+    margin-left: 15px;
+}

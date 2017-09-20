@@ -35,7 +35,7 @@
             <nav class="navbar navbar-static-top navbar-inverse">
                 <div class="container-fluid">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="/freediving">Freediving</a>
+                        <a class="navbar-brand hidden-xs" href="/freediving">Freediving</a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                                 data-target="#navbar-collapse" aria-expanded="false">
                             <span class="sr-only">Toggle navigation</span>
@@ -43,12 +43,16 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
+                        <p class="navbar-text navbar-left-margin visible-xs" id="login_xs"></p>
+
                     </div>
-                    <div class="collapse navbar-collapse" id="navbar-collapse">
+                    <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="/freediving" id="home-url">Tables</a></li>
                             <li><a href="/freediving/static.html">Experiencing static</a></li>
                         </ul>
+                    </div>
+                    <div class="navbar-header pull-right hidden-xs">
                         <div class="login navbar-right"></div>
                         <p class="syncing navbar-text navbar-right"></p>
                     </div>
@@ -60,13 +64,19 @@
             <div class="col-xs-12 col-sm-offset-1 col-sm-10">
 
                 <h1>Freediving Tables</h1>
-                <div class="row history hidden">
 
+                <!-- HISTORY -->
+                <div class="row history">
                     <div class="col-xs-12">
-                        <h2>History</h2>
+                        <h2>
+                            History
+                            <small>
+                                <a href="#" class="toggle-history">►Show history</a>
+                            </small>
+                        </h2>
                     </div>
 
-                    <div class="x-scroll">
+                    <div class="x-scroll history-table hidden">
                         <table class="table history">
                             <thead>
                             <tr>
@@ -88,6 +98,7 @@
                     </div>
                 </div>
 
+                <!-- ACTIVE TABLE -->
                 <div class="row">
 
                     <div class="col-xs-12">
@@ -117,6 +128,8 @@
                         <button id="start_table" class="btn" disabled="disabled">Start apnea</button>
                     </div>
                 </div>
+
+                <!-- GENERATE TABLE -->
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="inline-title">
@@ -127,7 +140,8 @@
 
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label for="preparation_time" class="control-label col-xs-12 col-sm-3 col-md-2">Initial rest
+                                <label for="preparation_time" class="control-label col-xs-12 col-sm-3 col-md-2">Initial
+                                    rest
                                     time:</label>
                                 <div class="col-xs-12 col-sm-3 col-md-2">
                                     <div class="input-group">
@@ -150,12 +164,14 @@
                     </div>
 
 
+                    <!-- CO2 TABLE -->
                     <div class="col-xs-12 col-sm-6">
                         <h3>CO2 Table</h3>
 
                         <form id="co2_table" class="form-horizontal">
                             <div class="form-group">
-                                <label for="co2_first_rest" class="control-label col-xs-12 col-sm-6">Starting rest time:</label>
+                                <label for="co2_first_rest" class="control-label col-xs-12 col-sm-6">Starting rest
+                                    time:</label>
                                 <div class="col-xs-12 col-sm-5">
                                     <div class="input-group">
                                         <input id="co2_first_rest" name="co2_first_rest" type="number"
@@ -193,6 +209,8 @@
                         </form>
 
                     </div>
+
+                    <!-- O2 TABLE -->
                     <div class="col-xs-12 col-sm-6">
                         <h3>O2 Table</h3>
 
@@ -244,6 +262,30 @@
             <footer class="navbar-inverse container-fluid">
                 <p class="footer-text">Made with <3 — photo courtesy of Christine Armie Marquez</p>
             </footer>
+        </div>
+    </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal fade" id="login_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Login</h4>
+            </div>
+            <form class="login">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="email" placeholder="email" class="form-control email"/>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Log In</button>
+                    </div>
+            </form>
         </div>
     </div>
 </div>
@@ -369,10 +411,10 @@
         var email = $.cookie('email');
         if (email) {
             sync.logIn(email);
-            showLogout(email);
+            loginUpdateDisplay(email);
         }
         else {
-            showLogin();
+            logoutUpdateDisplay();
         }
 
         $.each(tables, function (key, table) {
@@ -473,10 +515,10 @@
         $(document).on('submit', 'form.login', function (e) {
             e.preventDefault();
 
-            var email = $('#email').val().trim();
+            var email = $(this).find('.email').val().trim();
             sync.logIn(email);
 
-            showLogout(email);
+            loginUpdateDisplay(email);
         });
 
         /**
@@ -487,59 +529,67 @@
 
             sync.logOut();
 
-            showLogin();
+            logoutUpdateDisplay();
         });
 
         /**
          * Toggle/reload history block
          */
         $(document).on('click', '.toggle-history', function () {
-            var historyBlock = $('div.history');
-            var isVisible = !historyBlock.hasClass('hidden');
+            var historyTable = $('div.history-table');
+            var isVisible = !historyTable.hasClass('hidden');
 
             if (!isVisible) {
                 sync.refreshHistory();
-                historyBlock.removeClass('hidden');
-                $(this).text('Hide history');
+                historyTable.removeClass('hidden');
+                $(this).text('▼Hide history');
             }
             else {
-                historyBlock.addClass('hidden');
-                $(this).text('Show history');
+                historyTable.addClass('hidden');
+                $(this).text('►Show history');
             }
-        });
-
-        /**
-         * Reload history data
-         */
-        $(document).on('click', '.refresh-history', function () {
-            sync.refreshHistory();
         });
 
     });
 
-    function showLogin() {
+    function logoutUpdateDisplay() {
         var loginHtml = '<form class="login navbar-form">' +
             '<div class="form-group">' +
-            '<input type="email" placeholder="email" class="form-control" id="email"/>' +
+            '<input type="email" placeholder="email" class="form-control email"/>' +
             '</div>' +
             '<button class="btn btn-primary">Log In</button>' +
             '</form>';
         $('div.login').html(loginHtml);
+        $('p#login_xs').html('<a href="#" class="login" data-toggle="modal" data-target="#login_modal">\n' +
+            '  Login\n' +
+            '</a>');
 
+        // hide history section
         var historyBlock = $('div.history');
         if (!historyBlock.hasClass('hidden')) {
             historyBlock.addClass('hidden');
         }
+        $('input.email').val(null);
     }
 
-    function showLogout(email) {
-        var logoutHtml = '<p class="navbar-text">' +
-            '<a href="#" class="refresh-history">&#8635;</a>' +
-            ' <a href="#" class="toggle-history">Show history</a>' +
-            '</p>' +
-            ' <span class="navbar-label label label-primary">' + email + '</span>' +
+    function loginUpdateDisplay(email) {
+        var logoutHtml = ' <span class="navbar-label label label-primary">' + email + '</span>' +
             ' <a href="#" class="logout navbar-text">Logout</a>';
         $('div.login').html(logoutHtml);
+        $('p#login_xs').html('<a href="#" class="login logout">Logout</a>');
+
+        // show history section
+        var historyBlock = $('div.history');
+        if (historyBlock.hasClass('hidden')) {
+            historyBlock.removeClass('hidden');
+        }
+        var historyTable = $('div.history-table');
+        if (!historyTable.hasClass('hidden')) {
+            historyTable.addClass('hidden');
+        }
+
+        // dismiss login modal
+        $('#login_modal').modal('hide');
     }
 
     function setAndDisplayNewTable(newTable) {
