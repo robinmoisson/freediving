@@ -136,3 +136,8 @@ div.login {
 .navbar-text a {
     color: inherit;
 }
+
+.x-scroll {
+    width: 100%;
+    overflow-x: scroll;
+}

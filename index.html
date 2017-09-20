@@ -66,24 +66,26 @@
                         <h2>History</h2>
                     </div>
 
-                    <table class="table history">
-                        <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Repetitions</th>
-                            <th>Total time</th>
-                            <th>Holding time</th>
-                            <th>Shortest breath</th>
-                            <th>Completed?</th>
-                        </tr>
-                        </thead>
-                        <tbody class="history">
-                        <tr>
-                            <td colspan="100">No history yet</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="x-scroll">
+                        <table class="table history">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Repetitions</th>
+                                <th>Total time</th>
+                                <th>Holding time</th>
+                                <th>Shortest breath</th>
+                                <th>Completed?</th>
+                            </tr>
+                            </thead>
+                            <tbody class="history">
+                            <tr>
+                                <td colspan="100">No history yet</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="row">
@@ -125,20 +127,20 @@
 
                         <div class="form-horizontal">
                             <div class="form-group">
-                                <label for="preparation_time" class="control-label col-sm-3 col-md-2">Initial rest
+                                <label for="preparation_time" class="control-label col-xs-12 col-sm-3 col-md-2">Initial rest
                                     time:</label>
-                                <div class="col-sm-3 col-md-2">
+                                <div class="col-xs-12 col-sm-3 col-md-2">
                                     <div class="input-group">
                                         <input type="number" id="preparation_time" class="second-input form-control"/>
                                         <div class="input-group-addon">s</div>
                                     </div>
                                 </div>
-                                <label for="round_number" class="control-label col-sm-3 col-md-2">Number of
+                                <label for="round_number" class="control-label col-xs-12 col-sm-3 col-md-2">Number of
                                     rounds:</label>
-                                <div class="col-sm-3 col-md-2">
+                                <div class="col-xs-12 col-sm-3 col-md-2">
                                     <input type="number" id="round_number" class="col-xs-2 form-control"/>
                                 </div>
-                                <div class="checkbox col-sm-6 col-md-4">
+                                <div class="checkbox col-xs-12 col-sm-6 col-md-4">
                                     <label><input type="checkbox" id="is_playing_help_countdown" checked/>Motivation
                                         countdown <abbr
                                                 title="Will give you your remaining time during breath hold at 60, 30 and 15s mark">?</abbr></label>
@@ -153,8 +155,8 @@
 
                         <form id="co2_table" class="form-horizontal">
                             <div class="form-group">
-                                <label for="co2_first_rest" class="control-label col-sm-6">Starting rest time:</label>
-                                <div class="col-sm-5">
+                                <label for="co2_first_rest" class="control-label col-xs-12 col-sm-6">Starting rest time:</label>
+                                <div class="col-xs-12 col-sm-5">
                                     <div class="input-group">
                                         <input id="co2_first_rest" name="co2_first_rest" type="number"
                                                class="form-control second-input"/>
@@ -165,7 +167,7 @@
                             <div class="form-group">
                                 <label for="co2_decrease_by" class="control-label col-sm-6">Decrease rest time
                                     by:</label>
-                                <div class="col-sm-5">
+                                <div class="col-xs-12 col-sm-5">
                                     <div class="input-group">
                                         <input id="co2_decrease_by" name="co2_decrease_by" type="number"
                                                class="form-control second-input"/>
@@ -174,8 +176,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="co2_hold_time" class="control-label col-sm-6">Hold time:</label>
-                                <div class="col-sm-5">
+                                <label for="co2_hold_time" class="control-label col-xs-12 col-sm-6">Hold time:</label>
+                                <div class="col-xs-12 col-sm-5">
                                     <div class="input-group">
                                         <input id="co2_hold_time" name="co2_hold_time" type="number"
                                                class="form-control second-input"/>
@@ -184,7 +186,7 @@
                                 </div>
                             </div>
                             <div class="form-group visible-xs">
-                                <div class="col-sm-offset-6 col-sm-5">
+                                <div class="col-xs-12 col-sm-offset-6 col-sm-5">
                                     <button class="btn" type="submit">Load CO2 table</button>
                                 </div>
                             </div>
@@ -197,7 +199,7 @@
                         <form id="o2_table" class="form-horizontal">
                             <div class="form-group">
                                 <label for="o2_rest" class="control-label col-sm-6">Rest time:</label>
-                                <div class="col-sm-5">
+                                <div class="col-xs-12 col-sm-5">
                                     <div class="input-group">
                                         <input id="o2_rest" name="o2_rest" type="number"
                                                class="form-control second-input">
@@ -206,9 +208,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="o2_increase_by" class="control-label col-sm-6">Increase hold time
+                                <label for="o2_increase_by" class="control-label col-xs-12 col-sm-6">Increase hold time
                                     by:</label>
-                                <div class="col-sm-5">
+                                <div class="col-xs-12 col-sm-5">
                                     <div class="input-group">
                                         <input id="o2_increase_by" name="o2_increase_by" type="number"
                                                class="form-control second-input"/>
@@ -217,8 +219,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="o2_max_hold" class="control-label col-sm-6">Max hold time:</label>
-                                <div class="col-sm-5">
+                                <label for="o2_max_hold" class="control-label col-xs-12 col-sm-6">Max hold time:</label>
+                                <div class="col-xs-12 col-sm-5">
                                     <div class="input-group">
                                         <input id="o2_max_hold" name="o2_max_hold" type="number"
                                                class="form-control second-input"/>
@@ -227,7 +229,7 @@
                                 </div>
                             </div>
                             <div class="form-group visible-xs">
-                                <div class="col-sm-offset-6 col-sm-5">
+                                <div class="col-xs-12 col-sm-offset-6 col-sm-5">
                                     <button class="btn" type="submit">Load O2 table</button>
                                 </div>
                             </div>
