@@ -149,3 +149,8 @@ div.modal-dialog {
 .navbar-left-margin {
     margin-left: 15px;
 }
+
+p.footer-text > a {
+    color: inherit;
+    text-decoration: underline;
+}
