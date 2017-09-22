@@ -405,19 +405,19 @@
                 selectorId: 'preparation_time'
             },
             numberOfRounds: {
-                value: 9,
+                value: 8,
                 selectorId: 'round_number'
             },
             firstRestTime: {
-                value: 60,
+                value: 135,
                 selectorId: 'co2_first_rest'
             },
             decreaseBy: {
-                value: 5,
+                value: 15,
                 selectorId: 'co2_decrease_by'
             },
             holdTime: {
-                value: 120,
+                value: 135,
                 selectorId: 'co2_hold_time'
             },
             isPlayingHelpCountdown: {
@@ -703,12 +703,9 @@
 
     function updateSecondInput(secondInput) {
         var seconds = parseInt($(secondInput).val());
-        var displayTime ='0s';
-        if (seconds) {
-            var min = Math.floor(seconds/60);
-            displayTime = (min ? (Math.floor(seconds/60) + 'min ') : '') + (seconds % 60) + 's';
-        }
-        $(secondInput).parent('.input-group').find('.input-group-addon').text(displayTime);
+        $(secondInput).parent('.input-group').find('.input-group-addon').text(
+            helper.getDisplayDurationString(seconds)
+        );
     }
 
 </script>

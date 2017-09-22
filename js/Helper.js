@@ -7,6 +7,6 @@ var helper = {
         var seconds = totalTimeInSec;
         return ((hours > 0) ? (hours + 'h ') : '')
             + ((minutes > 0) ? (minutes + 'min ') : '')
-            + ((seconds > 0) ? (seconds + 's ') : '');
+            + ((seconds > 0) ? (seconds + 's') : '');
     }
 };

@@ -98,7 +98,7 @@ var Interval = (function(){
     };
 
     interval.prototype.display = function() {
-        return this.getType() + ' for ' + this.duration + 's';
+        return this.getType() + ' for ' + helper.getDisplayDurationString(this.duration);
     };
 
     return interval;
