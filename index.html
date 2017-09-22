@@ -453,11 +453,14 @@
             table.settings.updateDisplay();
         });
 
+        updateAllSecondInput();
+
         $('#reset_all').click(function () {
             $.each(tables, function (key, table) {
                 table.settings.reset();
                 table.settings.saveToCookie();
             });
+            updateAllSecondInput();
         });
 
         $('#start_table').click(function () {
@@ -583,6 +586,10 @@
             }
         });
 
+        $(document).on('input', '.second-input', function() {
+            updateSecondInput(this);
+        })
+
     });
 
     function logoutUpdateDisplay() {
@@ -686,6 +693,22 @@
         $('#start_table').prop('disabled', false);
         $('#pause_table').prop('disabled', true);
         noSleep.disable();
+    }
+
+    function updateAllSecondInput() {
+        $.each($('.second-input'), function (key, secondInput) {
+            updateSecondInput(secondInput);
+        });
+    }
+
+    function updateSecondInput(secondInput) {
+        var seconds = parseInt($(secondInput).val());
+        var displayTime ='0s';
+        if (seconds) {
+            var min = Math.floor(seconds/60);
+            displayTime = (min ? (Math.floor(seconds/60) + 'min ') : '') + (seconds % 60) + 's';
+        }
+        $(secondInput).parent('.input-group').find('.input-group-addon').text(displayTime);
     }
 
 </script>
