@@ -1,7 +1,6 @@
 var Settings = (function(){
     var settings = function Settings(defaultSettings){
         this.getDefaultSettings = function(){
-            console.log(defaultSettings['preparationTime']);
             // clone the default settings
             return JSON.parse(JSON.stringify(defaultSettings));
         };
